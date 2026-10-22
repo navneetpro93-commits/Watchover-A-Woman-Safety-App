@@ -2,14 +2,6 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Mail, Phone, PhoneCall, ShieldAlert, ShieldCheck, LogOut, Award, Settings as SettingsIcon } from 'lucide-react';
 
-/**
- * Profile Page Component
- * Displays user profile details & list of saved Emergency Contacts.
- * 
- * @param {Object} props
- * @param {Object} props.user - User information object
- * @param {Function} props.onLogout - Callback to handle logout
- */
 function Profile({ user, onLogout }) {
   const navigate = useNavigate();
 

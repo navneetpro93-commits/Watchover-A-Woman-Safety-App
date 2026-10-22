@@ -29,7 +29,7 @@ function Footer() {
           Empowering safety through awareness, practical tips, and community vigilance.
         </p>
 
-        {/* Team Members Display */}
+       
         <div className="footer-team-section">
           <div className="footer-team-header">
             <Users size={16} /> <span>CE1 Project Team Members</span>
@@ -37,7 +37,7 @@ function Footer() {
           <div className="footer-team-grid">
             {teamMembers.map((member, index) => (
               <span key={index} className={`footer-team-badge ${member.isLeader ? 'leader-badge' : ''}`}>
-                {member.isLeader && <Crown size={14} className="leader-crown-icon" />}
+                {member.isLeader && <Crown size={16} className="leader-crown-icon" />}
                 {member.name} {member.isLeader && <small>(Group Leader)</small>}
               </span>
             ))}

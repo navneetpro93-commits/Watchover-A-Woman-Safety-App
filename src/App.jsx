@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -9,112 +9,27 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Home from './pages/Home';
 import Services from './pages/Services';
+import ServiceDetail from './pages/ServiceDetail';
 import SafetyTips from './pages/SafetyTips';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
+import NotFound from './pages/NotFound';
+
+import { ThemeProvider, useTheme } from './context/ThemeContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 
 /**
- * Main Application Component
- * Demonstrates:
- * 1. Global state management for user profile, emergency contacts array & theme preferences
- * 2. Light / Dark mode theme persistence using useEffect & document data-theme
- * 3. Protected Routes for Home, Services, SafetyTips, Profile, and Settings
+ * AppContent Component
+ * Consumes global AuthContext and ThemeContext via custom hooks (useAuth, useTheme).
+ * Eliminates prop-drilling across routes, navbar, and protected views.
  */
-function App() {
-  // Store logged-in user details in localStorage
-  const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('watchover_user');
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
-
-  // Dark mode theme state
-  const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem('watchover_theme') === 'dark';
-  });
-
-  // Apply dark mode theme to root document HTML element whenever state changes
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      localStorage.setItem('watchover_theme', 'dark');
-    } else {
-      document.documentElement.setAttribute('data-theme', 'light');
-      localStorage.setItem('watchover_theme', 'light');
-    }
-  }, [darkMode]);
-
-  const handleToggleDarkMode = () => {
-    setDarkMode(prev => !prev);
-  };
-
-  // Derived authentication status
-  const isAuthenticated = !!user;
-
-  // Handle successful user login
-  const handleLogin = (userData) => {
-    // Check if user filled out signup form and saved registered details
-    const savedRegUserStr = localStorage.getItem('watchover_registered_user');
-    let registeredUser = null;
-    if (savedRegUserStr) {
-      try {
-        registeredUser = JSON.parse(savedRegUserStr);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    let activeUser = null;
-
-    if (registeredUser) {
-      // Use exact phone, parent/guardian info and emergency contacts entered by user
-      activeUser = {
-        ...registeredUser,
-        name: userData.name || registeredUser.name,
-        email: userData.email || registeredUser.email
-      };
-    } else {
-      // Direct login without signup
-      activeUser = {
-        name: userData.name || 'WatchOver Member',
-        email: userData.email || 'user@watchover.org',
-        phone: userData.phone || '',
-        altPhone: userData.altPhone || '',
-        emergencyContacts: [],
-        notifications: true,
-        locationPermission: true
-      };
-    }
-
-    setUser(activeUser);
-    localStorage.setItem('watchover_user', JSON.stringify(activeUser));
-  };
-
-  // Handle direct signup user state
-  const handleSignup = (registeredUserData) => {
-    setUser(registeredUserData);
-    localStorage.setItem('watchover_user', JSON.stringify(registeredUserData));
-  };
-
-  // Handle profile / settings update
-  const handleUpdateUser = (updatedUserData) => {
-    setUser(updatedUserData);
-    localStorage.setItem('watchover_user', JSON.stringify(updatedUserData));
-  };
-
-  // Handle user logout
-  const handleLogout = () => {
-    setUser(null);
-    localStorage.removeItem('watchover_user');
-  };
+function AppContent() {
+  const { user, isAuthenticated, login, signup, updateUser, logout } = useAuth();
+  const { darkMode, toggleDarkMode } = useTheme();
 
   return (
     <Router>
-      <Navbar 
-        isAuthenticated={isAuthenticated} 
-        onLogout={handleLogout} 
-        darkMode={darkMode}
-        onToggleDarkMode={handleToggleDarkMode}
-      />
+      <Navbar />
       <main>
         <Routes>
           {/* Public Pages Accessible Before Login */}
@@ -125,13 +40,13 @@ function App() {
           <Route 
             path="/login" 
             element={
-              isAuthenticated ? <Navigate to="/home" replace /> : <Login onLogin={handleLogin} />
+              isAuthenticated ? <Navigate to="/home" replace /> : <Login onLogin={login} />
             } 
           />
           <Route 
             path="/signup" 
             element={
-              isAuthenticated ? <Navigate to="/home" replace /> : <Signup onSignup={handleSignup} />
+              isAuthenticated ? <Navigate to="/home" replace /> : <Signup onSignup={signup} />
             } 
           />
 
@@ -139,7 +54,7 @@ function App() {
           <Route 
             path="/home" 
             element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <ProtectedRoute>
                 <Home />
               </ProtectedRoute>
             } 
@@ -147,15 +62,23 @@ function App() {
           <Route 
             path="/services" 
             element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <ProtectedRoute>
                 <Services />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/services/:serviceId" 
+            element={
+              <ProtectedRoute>
+                <ServiceDetail />
               </ProtectedRoute>
             } 
           />
           <Route 
             path="/safety-tips" 
             element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <ProtectedRoute>
                 <SafetyTips />
               </ProtectedRoute>
             } 
@@ -163,20 +86,20 @@ function App() {
           <Route 
             path="/profile" 
             element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <Profile user={user} onLogout={handleLogout} />
+              <ProtectedRoute>
+                <Profile user={user} onLogout={logout} />
               </ProtectedRoute>
             } 
           />
           <Route 
             path="/settings" 
             element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <ProtectedRoute>
                 <Settings 
                   user={user} 
-                  onUpdateUser={handleUpdateUser} 
+                  onUpdateUser={updateUser} 
                   darkMode={darkMode}
-                  onToggleDarkMode={handleToggleDarkMode}
+                  onToggleDarkMode={toggleDarkMode}
                 />
               </ProtectedRoute>
             } 
@@ -188,10 +111,10 @@ function App() {
             element={<Navigate to={isAuthenticated ? "/home" : "/about"} replace />} 
           />
 
-          {/* Catch-all Fallback Redirect */}
+          {/* Catch-all Fallback Route */}
           <Route 
             path="*" 
-            element={<Navigate to={isAuthenticated ? "/home" : "/about"} replace />} 
+            element={<NotFound isAuthenticated={isAuthenticated} />} 
           />
         </Routes>
       </main>
@@ -200,6 +123,20 @@ function App() {
   );
 }
 
-export default App;
+/**
+ * Root Application Component
+ * Wraps the application tree in Global ThemeProvider and AuthProvider.
+ * Fulfills syllabus: Context API, State architecture in React apps, Global vs local state.
+ */
+function App() {
+  return (
+    <ThemeProvider>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </ThemeProvider>
+  );
+}
 
+export default App;
 

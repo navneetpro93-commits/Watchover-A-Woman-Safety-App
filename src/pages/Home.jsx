@@ -4,7 +4,7 @@ import { Navigation, Users, Smartphone, ShieldAlert, ArrowRight } from 'lucide-r
 import ServiceCard from '../components/ServiceCard';
 
 /**
- * Home Page Component
+ * Home Page Component (CE1 Project)
  * Demonstrates:
  * 1. Hero banner layout
  * 2. Rendering arrays of data using reusable ServiceCard components
@@ -74,6 +74,7 @@ function Home() {
             {safetyCategories.map((category) => (
               <ServiceCard
                 key={category.id}
+                id={category.id}
                 title={category.title}
                 description={category.description}
                 icon={category.icon}

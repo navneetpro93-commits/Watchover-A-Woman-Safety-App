@@ -55,7 +55,6 @@ function SafetyTips() {
     }
   ];
 
-  // State for search query
   const [searchQuery, setSearchQuery] = useState('');
 
   // State for saved tip IDs
@@ -70,18 +69,18 @@ function SafetyTips() {
     }
   };
 
-  // Filter tips based on search query
+
   const filteredTips = initialTips.filter((tip) =>
     tip.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     tip.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Get list of saved tip objects
+  
   const savedTipsList = initialTips.filter((tip) => savedTipIds.includes(tip.id));
 
   return (
     <div className="safety-tips-page">
-      {/* Header Banner */}
+    
       <div className="tips-header text-center">
         <div className="container">
           <h1 className="section-title">Safety Tips & Guidelines</h1>
@@ -89,7 +88,7 @@ function SafetyTips() {
             Search, explore, and save practical safety advice for daily situations.
           </p>
 
-          {/* Search Box */}
+         
           <div className="search-box-wrapper">
             <Search className="search-icon" size={20} />
             <input
@@ -138,7 +137,7 @@ function SafetyTips() {
           )}
         </div>
 
-        {/* My Saved Tips Section */}
+      
         <div className="saved-tips-section page-section" style={{ borderTop: '1px solid var(--border-color)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
             <Bookmark size={24} style={{ color: 'var(--primary)' }} />

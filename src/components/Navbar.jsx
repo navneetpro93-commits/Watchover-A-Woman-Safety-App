@@ -1,22 +1,32 @@
 import React, { useState } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { Shield, Menu, X, LogOut, Settings as SettingsIcon, Sun, Moon } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 /**
- * Navbar Component
+ * Navbar Component (CE1 Project / CE2 Context API Integration)
  * Demonstrates:
- * 1. Public vs Protected navigation links
- * 2. Theme switcher toggle button
- * 3. Settings page link
- * 4. Mobile responsive navigation menu
- * 
- * @param {Object} props
- * @param {boolean} props.isAuthenticated - User authentication status
- * @param {Function} props.onLogout - Function to trigger logout
- * @param {boolean} props.darkMode - Current dark mode status
- * @param {Function} props.onToggleDarkMode - Function to toggle dark mode
+ * 1. Consuming global AuthContext & ThemeContext
+ * 2. Public vs Protected navigation links
+ * 3. Theme switcher toggle button
+ * 4. Settings page link
+ * 5. Mobile responsive navigation menu
  */
-function Navbar({ isAuthenticated, onLogout, darkMode, onToggleDarkMode }) {
+function Navbar({ 
+  isAuthenticated: propIsAuth, 
+  onLogout: propOnLogout, 
+  darkMode: propDarkMode, 
+  onToggleDarkMode: propToggleDark 
+}) {
+  const { isAuthenticated: contextIsAuth, logout: contextLogout } = useAuth();
+  const { darkMode: contextDarkMode, toggleDarkMode: contextToggleDark } = useTheme();
+
+  const isAuthenticated = propIsAuth !== undefined ? propIsAuth : contextIsAuth;
+  const darkMode = propDarkMode !== undefined ? propDarkMode : contextDarkMode;
+  const onToggleDarkMode = propToggleDark || contextToggleDark;
+  const onLogout = propOnLogout || contextLogout;
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
