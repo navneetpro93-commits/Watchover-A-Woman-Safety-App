@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { 
-  Settings as SettingsIcon, 
-  Sun, 
-  Moon, 
-  User, 
-  Mail, 
-  Phone, 
-  PhoneCall, 
-  ShieldAlert, 
-  Bell, 
-  CheckCircle, 
-  Save, 
-  Sliders, 
+import {
+  Settings as SettingsIcon,
+  Sun,
+  Moon,
+  User,
+  Mail,
+  Phone,
+  PhoneCall,
+  ShieldAlert,
+  Bell,
+  CheckCircle,
+  Save,
+  Sliders,
   Check,
   Plus,
   Trash2,
@@ -19,27 +19,44 @@ import {
   ArrowRightLeft
 } from 'lucide-react';
 
+/**
+ * Settings Page Component
+ * Features:
+ * 1. Dynamic Multiple Emergency Contacts management (Add & Remove contacts as wish)
+ * 2. Radio button selection for Theme (Light Mode vs Dark Mode)
+ * 3. Primary & Alternative phone number fields
+ * 4. Privacy & notification settings
+ *
+ * @param {Object} props
+ * @param {Object} props.user - Current user object
+ * @param {Function} props.onUpdateUser - Callback function to update user state in App
+ * @param {boolean} props.darkMode - Current dark mode state
+ * @param {Function} props.onToggleDarkMode - Callback function to toggle theme
+ */
 function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
   const [activeTab, setActiveTab] = useState('profile');
   const [selectedTheme, setSelectedTheme] = useState(darkMode ? 'dark' : 'light');
 
-  
+  // Profile form states
   const [name, setName] = useState(user?.name || 'WatchOver Member');
   const [email, setEmail] = useState(user?.email || 'user@watchover.org');
-  const [phone, setPhone] = useState(user?.phone || '');
-  const [altPhone, setAltPhone] = useState(user?.altPhone || '');
-  
-  const [emergencyContacts, setEmergencyContacts] = useState(user?.emergencyContacts || []);
+const [phone, setPhone] = useState(user?.phone || '');
+const [altPhone, setAltPhone] = useState(user?.altPhone || '');
 
+  // Dynamic Multiple Emergency Contacts State Array
+  const [emergencyContacts, setEmergencyContacts] = useState(
+  user?.emergencyContacts || []
+);
 
+  // Helper validations & strict input sanitizers
   const isOnlyNumbers = (str) => /^\d[\d\s+\-()]*$/.test(str.trim()) && str.trim().length > 0;
   const containsNumbers = (str) => /\d/.test(str);
   const containsLetters = (str) => /[a-zA-Z]/.test(str);
 
- 
+  // Phone alignment warning state
   const [phoneWarning, setPhoneWarning] = useState('');
 
-  
+  // Sanitize Phone Input - Strictly block any alphabetic letters
   const handlePhoneInputChange = (setter, val) => {
     if (containsLetters(val)) {
       setPhoneWarning('🚫 Phone number fields only accept digits (0-9). Letters are automatically blocked!');
@@ -49,22 +66,29 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
     setter(cleanPhone);
   };
 
+  // New emergency contact form inputs
   const [newContactName, setNewContactName] = useState('');
   const [newContactPhone, setNewContactPhone] = useState('');
 
-
+  // Preferences toggles
   const [notifications, setNotifications] = useState(user?.notifications ?? true);
   const [locationPermission, setLocationPermission] = useState(user?.locationPermission ?? true);
+
+  // Success feedback state
   const [successMessage, setSuccessMessage] = useState('');
 
+  // Quick swap handler if user accidentally puts number in Name field and vice versa
   const handleSwapInputs = () => {
     const tempName = newContactName;
     setNewContactName(newContactPhone);
     setNewContactPhone(tempName);
   };
 
+  // Handle adding a new emergency contact with auto-alignment
   const handleAddEmergencyContact = (e) => {
     e.preventDefault();
+
+    // Auto-alignment: If user typed numbers in Name field and left Phone empty, swap them automatically
     if (isOnlyNumbers(newContactName) && !newContactPhone.trim()) {
       setNewContactPhone(newContactName.trim());
       setNewContactName('');
@@ -85,15 +109,21 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
     setNewContactName('');
     setNewContactPhone('');
   };
+
+  // Handle removing an emergency contact
   const handleRemoveContact = (id) => {
     setEmergencyContacts(emergencyContacts.filter(c => c.id !== id));
   };
+
+  // Handle Radio button theme change
   const handleThemeRadioChange = (themeValue) => {
     setSelectedTheme(themeValue);
     if ((themeValue === 'dark' && !darkMode) || (themeValue === 'light' && darkMode)) {
       onToggleDarkMode();
     }
   };
+
+  // Handle saving all settings
   const handleSaveSettings = (e) => {
     if (e && e.preventDefault) e.preventDefault();
 
@@ -122,22 +152,19 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
   return (
     <div className="settings-page page-section" style={{ paddingTop: '30px' }}>
       <div className="container">
-      
+        {/* Compact Minimal Header */}
         <div className="compact-settings-header">
           <div className="compact-title-group">
-            <div className="settings-header-icon-box">
-              <SettingsIcon size={28} className="compact-settings-icon" />
-            </div>
-            <div>
-              <h1 className="compact-settings-title">Settings & Preferences</h1>
-              <p style={{ fontSize: '0.92rem', color: 'var(--text-muted)', margin: 0 }}>Manage profile information, emergency directory, theme, & alert privacy.</p>
-            </div>
+            <SettingsIcon size={24} className="compact-settings-icon" />
+            <h1 className="compact-settings-title">Settings</h1>
           </div>
 
           <button onClick={handleSaveSettings} className="btn-primary compact-save-btn">
-            <Save size={18} /> Save All Settings
+            <Save size={18} /> Save Changes
           </button>
         </div>
+
+        {/* Success Feedback Alert Banner */}
         {successMessage && (
           <div className="auth-alert alert-success" style={{ marginBottom: '24px' }}>
             <CheckCircle size={18} style={{ display: 'inline', marginRight: '8px' }} />
@@ -145,53 +172,51 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
           </div>
         )}
 
-  
+        {/* Phone Input Strict Letters Warning Banner */}
         {phoneWarning && (
-          <div className="alignment-warning-box" style={{ marginBottom: '24px', padding: '12px 16px', fontSize: '0.92rem' }}>
-            <AlertCircle size={18} style={{ flexShrink: 0, verticalAlign: 'middle' }} />
-            <span>{phoneWarning}</span>
+          <div className="auth-alert alert-error" style={{ marginBottom: '24px', backgroundColor: 'rgba(234, 179, 8, 0.15)', color: '#d97706', borderColor: '#eab308' }}>
+            <AlertCircle size={18} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} />
+            {phoneWarning}
           </div>
         )}
 
+        {/* Main Settings Layout */}
         <div className="professional-settings-layout">
           {/* Settings Sidebar Nav */}
           <div className="settings-sidebar">
-            <button 
+            <button
               className={`sidebar-tab-btn ${activeTab === 'profile' ? 'active' : ''}`}
               onClick={() => setActiveTab('profile')}
             >
-              <div className="tab-icon-badge bg-indigo"><User size={20} /></div>
-              <span>Profile & Personal Contacts</span>
+              <User size={22} /> Profile & Contacts
             </button>
 
-            <button 
+            <button
               className={`sidebar-tab-btn ${activeTab === 'emergency' ? 'active' : ''}`}
               onClick={() => setActiveTab('emergency')}
             >
-              <div className="tab-icon-badge bg-rose"><ShieldAlert size={20} /></div>
-              <span>Emergency Contacts ({emergencyContacts.length})</span>
+              <ShieldAlert size={22} /> Emergency Contacts ({emergencyContacts.length})
             </button>
 
-            <button 
+            <button
               className={`sidebar-tab-btn ${activeTab === 'appearance' ? 'active' : ''}`}
               onClick={() => setActiveTab('appearance')}
             >
-              <div className="tab-icon-badge bg-purple"><Sliders size={20} /></div>
-              <span>Appearance & Theme</span>
+              <Sliders size={22} /> Appearance & Theme
             </button>
 
-            <button 
+            <button
               className={`sidebar-tab-btn ${activeTab === 'privacy' ? 'active' : ''}`}
               onClick={() => setActiveTab('privacy')}
             >
-              <div className="tab-icon-badge bg-emerald"><Bell size={20} /></div>
-              <span>Notifications & Privacy</span>
+              <Bell size={22} /> Notifications & Privacy
             </button>
           </div>
 
+          {/* Settings Content Area */}
           <div className="settings-content-area">
             <form onSubmit={handleSaveSettings}>
-              
+              {/* Tab 1: Profile & Contact Numbers */}
               {(activeTab === 'profile' || activeTab === 'all') && (
                 <div className="prof-settings-card">
                   <div className="prof-card-title">
@@ -248,7 +273,7 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
                           id="setting-phone"
                           value={phone}
                           onChange={(e) => handlePhoneInputChange(setPhone, e.target.value)}
-                          placeholder="Enter your Mobile No "
+                          placeholder="+91 98765 43210"
                           required
                         />
                       </div>
@@ -263,7 +288,7 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
                           id="setting-alt-phone"
                           value={altPhone}
                           onChange={(e) => handlePhoneInputChange(setAltPhone, e.target.value)}
-                          placeholder="Enter your Mobile No"
+                          placeholder="Enter your mobile number"
                           required
                         />
                       </div>
@@ -272,7 +297,7 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
                 </div>
               )}
 
-              
+              {/* Tab 2: Dynamic Multiple Emergency Contacts */}
               {(activeTab === 'emergency' || activeTab === 'all') && (
                 <div className="prof-settings-card">
                   <div className="prof-card-title">
@@ -283,7 +308,7 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
                     </div>
                   </div>
 
-                  
+                  {/* Add New Emergency Contact Form */}
                   <div className="add-emergency-contact-box">
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                       <h4 style={{ margin: 0 }}>Add New Emergency Contact</h4>
@@ -331,8 +356,8 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
                         </div>
                       </div>
 
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         className="btn-primary add-contact-btn"
                         onClick={handleAddEmergencyContact}
                       >
@@ -341,7 +366,7 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
                     </div>
                   </div>
 
-                 
+                  {/* Existing Emergency Contacts List */}
                   <div className="emergency-contacts-list">
                     <h4>Saved Emergency Contacts</h4>
 
@@ -371,8 +396,8 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
                                 </div>
                               </div>
 
-                              <button 
-                                type="button" 
+                              <button
+                                type="button"
                                 className="remove-contact-btn"
                                 onClick={() => handleRemoveContact(contact.id)}
                                 title="Remove Contact"
@@ -392,7 +417,7 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
                 </div>
               )}
 
-    
+              {/* Tab 3: Appearance & Theme */}
               {(activeTab === 'appearance' || activeTab === 'all') && (
                 <div className="prof-settings-card">
                   <div className="prof-card-title">
@@ -404,8 +429,8 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
                   </div>
 
                   <div className="theme-radio-grid">
-                    
-                    <label 
+                    {/* Light Mode Radio Card */}
+                    <label
                       className={`theme-radio-card ${selectedTheme === 'light' ? 'selected' : ''}`}
                       onClick={() => handleThemeRadioChange('light')}
                     >
@@ -429,8 +454,8 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
                       <p>Clean, high-contrast light background for daytime use.</p>
                     </label>
 
-                    
-                    <label 
+                    {/* Dark Mode Radio Card */}
+                    <label
                       className={`theme-radio-card ${selectedTheme === 'dark' ? 'selected' : ''}`}
                       onClick={() => handleThemeRadioChange('dark')}
                     >
@@ -457,7 +482,7 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
                 </div>
               )}
 
-          
+              {/* Tab 4: Notifications & Privacy */}
               {(activeTab === 'privacy' || activeTab === 'all') && (
                 <div className="prof-settings-card">
                   <div className="prof-card-title">
@@ -475,10 +500,10 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
                         <p>Receive alerts for new safety tips and commute guidelines.</p>
                       </div>
                       <label className="toggle-switch">
-                        <input 
-                          type="checkbox" 
-                          checked={notifications} 
-                          onChange={(e) => setNotifications(e.target.checked)} 
+                        <input
+                          type="checkbox"
+                          checked={notifications}
+                          onChange={(e) => setNotifications(e.target.checked)}
                         />
                         <span className="toggle-slider"></span>
                       </label>
@@ -490,10 +515,10 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
                         <p>Allow WatchOver to access location data for commute safety.</p>
                       </div>
                       <label className="toggle-switch">
-                        <input 
-                          type="checkbox" 
-                          checked={locationPermission} 
-                          onChange={(e) => setLocationPermission(e.target.checked)} 
+                        <input
+                          type="checkbox"
+                          checked={locationPermission}
+                          onChange={(e) => setLocationPermission(e.target.checked)}
                         />
                         <span className="toggle-slider"></span>
                       </label>
@@ -502,7 +527,7 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
                 </div>
               )}
 
-              
+              {/* Footer Save Button */}
               <div className="prof-settings-footer">
                 <button type="submit" className="btn-primary" style={{ padding: '14px 32px' }}>
                   <Save size={18} /> Save All Settings
