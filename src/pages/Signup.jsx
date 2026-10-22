@@ -1,106 +1,162 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { UserPlus, User, Mail, Lock, Phone } from 'lucide-react';
+import { UserPlus, User, Mail, Lock, Phone, ShieldCheck } from 'lucide-react';
+import FormField from '../components/FormField';
+import { 
+  validateRequired, 
+  validateEmail, 
+  validatePhone, 
+  validatePassword, 
+  validateConfirmPassword 
+} from '../utils/validation';
+import { useAuth } from '../context/AuthContext';
 
 /**
  * Signup Page Component
- * Demonstrates:
- * 1. Controlled form inputs with useState
- * 2. Basic form validation (password matching, mandatory parent details)
- * 3. Navigation redirection to Login
+ * Demonstrates CE2 Syllabus Topics:
+ * - Form handling in React: Validation strategies (real-time, onBlur & onSubmit)
+ * - Reusable input components (FormField with icon, error message, and helper text)
+ * - Consuming global AuthContext
  */
-function Signup({ onSignup }) {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [mobileNo, setMobileNo] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  
-  // Emergency Contacts
-  const [parentMobileNo, setParentMobileNo] = useState('');
-  const [parentEmail, setParentEmail] = useState('');
-  const [guardianMobileNo, setGuardianMobileNo] = useState('');
-  const [guardianEmail, setGuardianEmail] = useState('');
+function Signup({ onSignup: propOnSignup }) {
+  const { signup: contextSignup } = useAuth();
+  const handleAuthSignup = propOnSignup || contextSignup;
 
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    mobileNo: '',
+    password: '',
+    confirmPassword: '',
+    parentMobileNo: '',
+    parentEmail: '',
+    guardianMobileNo: '',
+    guardianEmail: ''
+  });
+
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
   const [message, setMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
 
   const navigate = useNavigate();
 
-  const handlePhoneInputChange = (setter, val) => {
-    const cleanPhone = val.replace(/[^0-9+\-\s()]/g, '');
-    setter(cleanPhone);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    let finalVal = value;
+
+    // Sanitize phone inputs to numeric and phone characters
+    if (['mobileNo', 'parentMobileNo', 'guardianMobileNo'].includes(name)) {
+      finalVal = value.replace(/[^0-9+\-\s()]/g, '');
+    }
+
+    setFormData((prev) => ({ ...prev, [name]: finalVal }));
+
+    // Reset error when user resumes typing
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const validateField = (name, value) => {
+    switch (name) {
+      case 'name':
+        return validateRequired(value, 'Full Name');
+      case 'email':
+        return validateEmail(value);
+      case 'mobileNo':
+        return validatePhone(value, 'Primary mobile number');
+      case 'password':
+        return validatePassword(value);
+      case 'confirmPassword':
+        return validateConfirmPassword(value, formData.password);
+      case 'parentMobileNo':
+        return validatePhone(value, 'Parent mobile number');
+      case 'parentEmail':
+        return validateEmail(value);
+      case 'guardianEmail':
+        return value.trim() ? validateEmail(value) : '';
+      default:
+        return '';
+    }
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    setTouched((prev) => ({ ...prev, [name]: true }));
+    const err = validateField(name, value);
+    setErrors((prev) => ({ ...prev, [name]: err }));
+  };
+
+  const validateAll = () => {
+    const newErrors = {
+      name: validateRequired(formData.name, 'Full Name'),
+      email: validateEmail(formData.email),
+      mobileNo: validatePhone(formData.mobileNo, 'Primary mobile number'),
+      password: validatePassword(formData.password),
+      confirmPassword: validateConfirmPassword(formData.confirmPassword, formData.password),
+      parentMobileNo: validatePhone(formData.parentMobileNo, 'Parent mobile number'),
+      parentEmail: validateEmail(formData.parentEmail),
+      guardianEmail: formData.guardianEmail.trim() ? validateEmail(formData.guardianEmail) : ''
+    };
+
+    setErrors(newErrors);
+    setTouched({
+      name: true,
+      email: true,
+      mobileNo: true,
+      password: true,
+      confirmPassword: true,
+      parentMobileNo: true,
+      parentEmail: true,
+      guardianMobileNo: true,
+      guardianEmail: true
+    });
+
+    return !Object.values(newErrors).some(Boolean);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!name || !email || !mobileNo || !password || !confirmPassword) {
-      setMessage('Please fill in all standard fields.');
+    if (!validateAll()) {
+      setMessage('Please resolve all validation errors highlighted below.');
       setIsSuccess(false);
       return;
     }
 
-    if (!parentMobileNo || !parentEmail) {
-      setMessage('Parent mobile number and email are mandatory for emergency safety. They cannot be left blank.');
-      setIsSuccess(false);
-      return;
-    }
+    // Build structured emergency contacts list
+    const userEmergencyContacts = [
+      { id: 1, name: 'Parent Mobile', phone: formData.parentMobileNo },
+      { id: 2, name: 'Parent Email', phone: formData.parentEmail }
+    ];
 
-    if (password.length <= 6) {
-      setMessage('Password must be greater than 6 characters long.');
-      setIsSuccess(false);
-      return;
+    if (formData.guardianMobileNo.trim()) {
+      userEmergencyContacts.push({ id: 3, name: 'Guardian Mobile', phone: formData.guardianMobileNo.trim() });
     }
-
-    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
-    if (!hasSpecialChar) {
-      setMessage('Password must contain at least one special character (e.g. @, #, $, !).');
-      setIsSuccess(false);
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setMessage('Passwords do not match. Please try again.');
-      setIsSuccess(false);
-      return;
-    }
-
-    // Build emergency contacts list directly from user inputs
-    const userEmergencyContacts = [];
-    if (parentMobileNo) {
-      userEmergencyContacts.push({ id: 1, name: 'Parent Mobile', phone: parentMobileNo });
-    }
-    if (parentEmail) {
-      userEmergencyContacts.push({ id: 2, name: 'Parent Email', phone: parentEmail });
-    }
-    if (guardianMobileNo) {
-      userEmergencyContacts.push({ id: 3, name: 'Guardian Mobile', phone: guardianMobileNo });
-    }
-    if (guardianEmail) {
-      userEmergencyContacts.push({ id: 4, name: 'Guardian Email', phone: guardianEmail });
+    if (formData.guardianEmail.trim()) {
+      userEmergencyContacts.push({ id: 4, name: 'Guardian Email', phone: formData.guardianEmail.trim() });
     }
 
     const registeredUserData = {
-      name,
-      email,
-      phone: mobileNo,
-      altPhone: parentMobileNo,
-      parentMobileNo,
-      parentEmail,
-      guardianMobileNo,
-      guardianEmail,
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      phone: formData.mobileNo.trim(),
+      altPhone: formData.parentMobileNo.trim(),
+      parentMobileNo: formData.parentMobileNo.trim(),
+      parentEmail: formData.parentEmail.trim(),
+      guardianMobileNo: formData.guardianMobileNo.trim(),
+      guardianEmail: formData.guardianEmail.trim(),
       emergencyContacts: userEmergencyContacts,
       notifications: true,
       locationPermission: true
     };
 
-    // Save user data with exact entered mobile number into localStorage
+    // Save registered user state
     localStorage.setItem('watchover_registered_user', JSON.stringify(registeredUserData));
-    localStorage.setItem('watchover_user', JSON.stringify(registeredUserData));
 
-    if (onSignup) {
-      onSignup(registeredUserData);
+    if (handleAuthSignup) {
+      handleAuthSignup(registeredUserData);
     }
 
     setMessage('Account created successfully! Logging you in...');
@@ -108,19 +164,19 @@ function Signup({ onSignup }) {
 
     setTimeout(() => {
       navigate('/home');
-    }, 1200);
+    }, 1000);
   };
 
   return (
     <div className="auth-page page-section">
       <div className="container">
-        <div className="auth-card">
+        <div className="auth-card" style={{ maxWidth: '640px' }}>
           <div className="auth-header text-center">
             <div className="auth-icon">
               <UserPlus size={26} />
             </div>
-            <h2>Create an Account</h2>
-            <p>Join WatchOver to access safety services</p>
+            <h2>Create Your WatchOver Account</h2>
+            <p>Join the community and configure your emergency network</p>
           </div>
 
           {message && (
@@ -129,153 +185,146 @@ function Signup({ onSignup }) {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="auth-form">
-            <div className="form-group">
-              <label htmlFor="name">Full Name</label>
-              <div className="input-wrapper">
-                <User size={18} className="input-icon" />
-                <input
-                  type="text"
-                  id="name"
-                  placeholder="Enter your full name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
-              </div>
+          <form onSubmit={handleSubmit} className="auth-form" noValidate>
+            {/* Section 1: Personal Profile */}
+            <div className="form-section-header">
+              <h4>1. Personal Information</h4>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="email">Email Address</label>
-              <div className="input-wrapper">
-                <Mail size={18} className="input-icon" />
-                <input
-                  type="email"
-                  id="email"
-                  placeholder="name@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
+            <FormField
+              id="signup-name"
+              name="name"
+              label="Full Name"
+              value={formData.name}
+              onChange={handleInputChange}
+              onBlur={handleBlur}
+              placeholder="e.g. Ananya Sharma"
+              required
+              autoComplete="name"
+              icon={<User size={18} className="input-icon" />}
+              error={touched.name ? errors.name : ''}
+            />
+
+            <FormField
+              id="signup-email"
+              name="email"
+              label="Email Address"
+              type="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              onBlur={handleBlur}
+              placeholder="name@example.com"
+              required
+              autoComplete="email"
+              icon={<Mail size={18} className="input-icon" />}
+              error={touched.email ? errors.email : ''}
+            />
+
+            <FormField
+              id="signup-mobile"
+              name="mobileNo"
+              label="Primary Mobile Number"
+              type="tel"
+              value={formData.mobileNo}
+              onChange={handleInputChange}
+              onBlur={handleBlur}
+              placeholder="+91 98765 43210"
+              required
+              autoComplete="tel"
+              icon={<Phone size={18} className="input-icon" />}
+              error={touched.mobileNo ? errors.mobileNo : ''}
+            />
+
+            {/* Section 2: Security & Password */}
+            <div className="form-section-header" style={{ marginTop: '20px' }}>
+              <h4>2. Security Credentials</h4>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="mobileNo">Your Mobile Number</label>
-              <div className="input-wrapper">
-                <Phone size={18} className="input-icon" />
-                <input
-                  type="tel"
-                  id="mobileNo"
-                  placeholder="Enter your mobile number"
-                  value={mobileNo}
-                  onChange={(e) => handlePhoneInputChange(setMobileNo, e.target.value)}
-                  required
-                />
-              </div>
-            </div>
+            <FormField
+              id="signup-password"
+              name="password"
+              label="Account Password"
+              type="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              onBlur={handleBlur}
+              placeholder="Min 7 chars with 1 special char"
+              required
+              autoComplete="new-password"
+              icon={<Lock size={18} className="input-icon" />}
+              helperText="Must be at least 7 characters and contain a special character (!@#$%^&*)."
+              error={touched.password ? errors.password : ''}
+            />
 
-            <div style={{ marginTop: '16px', marginBottom: '8px', borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
-              <h3 style={{ fontSize: '1.1rem', marginBottom: '12px' }}>Emergency Contacts</h3>
-              
-              <h4 style={{ fontSize: '1rem', marginBottom: '12px' }}>Parent Details (Required)</h4>
-              
-              <div className="form-group" style={{ marginBottom: '12px' }}>
-                <label htmlFor="parentMobileNo">Parent Mobile Number <span style={{ color: 'var(--primary)' }}>*</span></label>
-                <div className="input-wrapper">
-                  <Phone size={18} className="input-icon" />
-                  <input
-                    type="tel"
-                    id="parentMobileNo"
-                    placeholder="Parent's mobile number"
-                    value={parentMobileNo}
-                    onChange={(e) => handlePhoneInputChange(setParentMobileNo, e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
-              
-              <div className="form-group" style={{ marginBottom: '24px' }}>
-                <label htmlFor="parentEmail">Parent Email <span style={{ color: 'var(--primary)' }}>*</span></label>
-                <div className="input-wrapper">
-                  <Mail size={18} className="input-icon" />
-                  <input
-                    type="email"
-                    id="parentEmail"
-                    placeholder="Parent's email address"
-                    value={parentEmail}
-                    onChange={(e) => setParentEmail(e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
+            <FormField
+              id="signup-confirm-password"
+              name="confirmPassword"
+              label="Confirm Password"
+              type="password"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+              onBlur={handleBlur}
+              placeholder="Re-type your password"
+              required
+              autoComplete="new-password"
+              icon={<Lock size={18} className="input-icon" />}
+              error={touched.confirmPassword ? errors.confirmPassword : ''}
+            />
 
-              <h4 style={{ fontSize: '1rem', marginBottom: '12px' }}>Guardian Details (Optional)</h4>
-
-              <div className="form-group" style={{ marginBottom: '12px' }}>
-                <label htmlFor="guardianMobileNo">Guardian Mobile Number</label>
-                <div className="input-wrapper">
-                  <Phone size={18} className="input-icon" />
-                  <input
-                    type="tel"
-                    id="guardianMobileNo"
-                    placeholder="Guardian's mobile number (Optional)"
-                    value={guardianMobileNo}
-                    onChange={(e) => handlePhoneInputChange(setGuardianMobileNo, e.target.value)}
-                  />
-                </div>
+            {/* Section 3: Emergency Contacts */}
+            <div className="form-section-header" style={{ marginTop: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <ShieldCheck size={18} className="text-primary" />
+                <h4 style={{ margin: 0 }}>3. Mandatory Emergency Contacts</h4>
               </div>
-
-              <div className="form-group" style={{ marginBottom: '16px' }}>
-                <label htmlFor="guardianEmail">Guardian Email</label>
-                <div className="input-wrapper">
-                  <Mail size={18} className="input-icon" />
-                  <input
-                    type="email"
-                    id="guardianEmail"
-                    placeholder="Guardian's email address (Optional)"
-                    value={guardianEmail}
-                    onChange={(e) => setGuardianEmail(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="form-group" style={{ borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
-              <label htmlFor="password">Password</label>
-              <div className="input-wrapper">
-                <Lock size={18} className="input-icon" />
-                <input
-                  type="password"
-                  id="password"
-                  placeholder="Create a password (min 7 chars, 1 special char)"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                Must be greater than 6 characters and include at least 1 special character (@, #, $, !, etc.)
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
+                Required for student safety validation and fast emergency dispatch.
               </p>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="confirmPassword">Confirm Password</label>
-              <div className="input-wrapper">
-                <Lock size={18} className="input-icon" />
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  placeholder="Confirm your password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
+            <FormField
+              id="signup-parent-mobile"
+              name="parentMobileNo"
+              label="Parent / Guardian Mobile Number"
+              type="tel"
+              value={formData.parentMobileNo}
+              onChange={handleInputChange}
+              onBlur={handleBlur}
+              placeholder="+91 98765 00000"
+              required
+              icon={<Phone size={18} className="input-icon" />}
+              error={touched.parentMobileNo ? errors.parentMobileNo : ''}
+            />
 
-            <button type="submit" className="btn-primary auth-submit-btn">
-              Sign Up
+            <FormField
+              id="signup-parent-email"
+              name="parentEmail"
+              label="Parent / Guardian Email"
+              type="email"
+              value={formData.parentEmail}
+              onChange={handleInputChange}
+              onBlur={handleBlur}
+              placeholder="parent@example.com"
+              required
+              icon={<Mail size={18} className="input-icon" />}
+              error={touched.parentEmail ? errors.parentEmail : ''}
+            />
+
+            <FormField
+              id="signup-guardian-mobile"
+              name="guardianMobileNo"
+              label="Secondary Guardian Mobile (Optional)"
+              type="tel"
+              value={formData.guardianMobileNo}
+              onChange={handleInputChange}
+              onBlur={handleBlur}
+              placeholder="+91 98765 11111"
+              icon={<Phone size={18} className="input-icon" />}
+              error={touched.guardianMobileNo ? errors.guardianMobileNo : ''}
+            />
+
+            <button type="submit" className="btn-primary auth-submit-btn" style={{ marginTop: '16px' }}>
+              Complete Registration & Access WatchOver
             </button>
           </form>
 

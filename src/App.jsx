@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -14,6 +14,7 @@ import SafetyTips from './pages/SafetyTips';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import NotFound from './pages/NotFound';
+import SosModal from './components/SosModal';
 
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -24,12 +25,13 @@ import { AuthProvider, useAuth } from './context/AuthContext';
  * Eliminates prop-drilling across routes, navbar, and protected views.
  */
 function AppContent() {
+  const [isSosOpen, setIsSosOpen] = useState(false);
   const { user, isAuthenticated, login, signup, updateUser, logout } = useAuth();
   const { darkMode, toggleDarkMode } = useTheme();
 
   return (
     <Router>
-      <Navbar />
+      <Navbar onOpenSos={() => setIsSosOpen(true)} />
       <main>
         <Routes>
           {/* Public Pages Accessible Before Login */}
@@ -119,6 +121,10 @@ function AppContent() {
         </Routes>
       </main>
       <Footer />
+      <SosModal 
+        isOpen={isSosOpen} 
+        onClose={() => setIsSosOpen(false)} 
+      />
     </Router>
   );
 }
