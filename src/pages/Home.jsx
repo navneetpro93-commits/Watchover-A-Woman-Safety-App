@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Navigation, Users, Smartphone, ShieldAlert, ArrowRight } from 'lucide-react';
+import { Navigation, Users, Smartphone, ShieldAlert, ArrowRight, Radio } from 'lucide-react';
 import ServiceCard from '../components/ServiceCard';
 
 /**
@@ -9,7 +9,7 @@ import ServiceCard from '../components/ServiceCard';
  * 1. Hero banner layout
  * 2. Rendering arrays of data using reusable ServiceCard components
  */
-function Home() {
+function Home({ onOpenSos }) {
   // Array of 4 Safety Categories
   const safetyCategories = [
     {
@@ -54,9 +54,23 @@ function Home() {
             practical daily awareness services.
           </p>
 
-          <Link to="/services" className="btn-primary">
-            Explore Services <ArrowRight size={18} />
-          </Link>
+          <div className="hero-btn-group">
+            <Link to="/services" className="btn-primary">
+              Explore Services <ArrowRight size={18} />
+            </Link>
+            {onOpenSos && (
+              <button 
+                type="button" 
+                className="hero-sos-btn"
+                onClick={onOpenSos}
+                title="Immediate Distress Siren & Personal Emergency Alert"
+              >
+                <span className="sos-beacon-dot"></span>
+                <Radio size={18} className="nav-sos-icon" />
+                <span>Instant Emergency SOS</span>
+              </button>
+            )}
+          </div>
         </div>
       </section>
 

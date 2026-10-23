@@ -57,7 +57,7 @@ function AppContent() {
             path="/home" 
             element={
               <ProtectedRoute>
-                <Home />
+                <Home onOpenSos={() => setIsSosOpen(true)} />
               </ProtectedRoute>
             } 
           />

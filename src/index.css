@@ -328,45 +328,111 @@ a {
   background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   color: #ffffff;
   border: 1px solid #b91c1c;
-  padding: 9px 18px;
-  border-radius: 20px;
-  font-weight: 800;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font-weight: 700;
   font-size: 0.88rem;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
   box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
-  animation: sosPulseGlow 2s infinite ease-in-out;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: sosPulseGlow 2.2s infinite ease-in-out;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.nav-sos-btn:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 18px rgba(239, 68, 68, 0.6);
+}
+
+.nav-sos-btn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* Pulsing radar dot inside SOS button */
+.sos-beacon-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 6px #ffffff;
+  animation: beaconBlink 1s infinite alternate ease-in-out;
+  flex-shrink: 0;
+}
+
+@keyframes beaconBlink {
+  0% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.2);
+    box-shadow: 0 0 10px #ffffff;
+  }
+}
+
+.nav-sos-icon {
+  animation: sosIconBlink 1.5s infinite;
+  flex-shrink: 0;
 }
 
 @keyframes sosPulseGlow {
   0% {
     box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6);
-    transform: scale(1);
   }
-  50% {
-    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
-    transform: scale(1.02);
+  65% {
+    box-shadow: 0 0 0 9px rgba(239, 68, 68, 0);
   }
   100% {
     box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
-    transform: scale(1);
   }
-}
-
-.nav-sos-btn:hover {
-  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-  transform: translateY(-2px) scale(1.04);
-  box-shadow: 0 6px 18px rgba(239, 68, 68, 0.55);
-}
-
-.nav-sos-icon {
-  animation: sosIconBlink 1.5s infinite;
 }
 
 @keyframes sosIconBlink {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  50% { opacity: 0.55; }
+}
+
+/* Hero Button Group & Hero SOS Button */
+.hero-btn-group {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.hero-sos-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: #ffffff;
+  padding: 14px 26px;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  border: 1px solid #b91c1c;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.35);
+  animation: sosPulseGlow 2.2s infinite ease-in-out;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.hero-sos-btn:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.55);
+}
+
+.hero-sos-btn:active {
+  transform: translateY(0) scale(0.97);
 }
 
 .theme-quick-btn {
@@ -1014,42 +1080,132 @@ a {
   color: var(--text-muted);
 }
 
-/* Roadmap Grid */
-.roadmap-grid {
+/* Academic Syllabus Mapping (CE1 & CE2) */
+.syllabus-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 24px;
 }
 
-.roadmap-card {
-  background-color: rgba(147, 51, 234, 0.08);
-  border: 1px dashed rgba(168, 85, 247, 0.4);
-  border-radius: var(--radius-md);
-  padding: 24px;
+.syllabus-card {
+  background-color: var(--bg-main);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
-.roadmap-badge {
-  display: inline-block;
-  background-color: rgba(168, 85, 247, 0.2);
-  color: #c084fc;
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 12px;
+.syllabus-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.syllabus-card.ce1-accent {
+  border-top: 4px solid var(--primary);
+}
+
+.syllabus-card.ce2-accent {
+  border-top: 4px solid #10b981;
+}
+
+.syllabus-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
   margin-bottom: 12px;
+}
+
+.syllabus-icon-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ce1-accent .syllabus-icon-badge {
+  background-color: var(--primary-light);
+  color: var(--primary);
+}
+
+.ce2-accent .syllabus-icon-badge {
+  background-color: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+}
+
+.syllabus-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-bottom: 4px;
 }
 
-.roadmap-card h4 {
+.ce1-accent .syllabus-badge {
+  background-color: var(--primary-light);
+  color: var(--primary);
+}
+
+.ce2-accent .syllabus-badge {
+  background-color: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+}
+
+.syllabus-title {
+  font-size: 1.18rem;
   color: var(--secondary);
-  font-size: 1.15rem;
-  margin-bottom: 8px;
+  font-weight: 700;
+  margin: 0;
 }
 
-.roadmap-card p {
+.syllabus-desc {
+  font-size: 0.92rem;
   color: var(--text-muted);
-  font-size: 0.9rem;
   line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.syllabus-modules-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.syllabus-module-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.module-bullet {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.ce1-accent .module-bullet {
+  color: var(--primary);
+}
+
+.ce2-accent .module-bullet {
+  color: #10b981;
+}
+
+.module-text strong {
+  color: var(--secondary);
+}
+
+.module-text span {
+  color: var(--text-muted);
 }
 
 /* Bottom CTA Banner */
@@ -2284,6 +2440,11 @@ input:checked + .toggle-slider:before {
 }
 
 @media (max-width: 640px) {
+    .nav-sos-btn {
+        padding: 7px 12px;
+        font-size: 0.8rem;
+        gap: 6px;
+    }
     .not-found-code {
         font-size: 5rem;
     }

@@ -176,6 +176,7 @@ function Navbar({
             onClick={() => { closeMenu(); if (onOpenSos) onOpenSos(); }}
             title="Immediate Distress Siren & Personal Emergency Alert"
           >
+            <span className="sos-beacon-dot"></span>
             <Radio size={16} className="nav-sos-icon" />
             <span>SOS Alert</span>
           </button>
