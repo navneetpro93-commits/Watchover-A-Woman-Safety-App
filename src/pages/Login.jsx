@@ -1,41 +1,91 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LogIn, Mail, Lock } from 'lucide-react';
+import FormField from '../components/FormField';
+import { validateEmail, validateRequired } from '../utils/validation';
+import { useAuth } from '../context/AuthContext';
 
-function Login({ onLogin }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+/**
+ * Login Page Component
+ * Demonstrates CE2 Syllabus Topics:
+ * - Form handling in React with Reusable FormField components
+ * - Validation strategies (onBlur validation + onSubmit check)
+ * - Consuming AuthContext directly for authentication flow
+ */
+function Login({ onLogin: propOnLogin }) {
+  const { login: contextLogin } = useAuth();
+  const handleAuthLogin = propOnLogin || contextLogin;
+
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
   const [message, setMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
 
   const navigate = useNavigate();
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Clear error dynamically once user starts typing
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    setTouched((prev) => ({ ...prev, [name]: true }));
+
+    let err = '';
+    if (name === 'email') err = validateEmail(value);
+    if (name === 'password') err = validateRequired(value, 'Password');
+
+    setErrors((prev) => ({ ...prev, [name]: err }));
+  };
+
+  const validateAll = () => {
+    const newErrors = {
+      email: validateEmail(formData.email),
+      password: validateRequired(formData.password, 'Password')
+    };
+
+    setErrors(newErrors);
+    return !Object.values(newErrors).some(Boolean);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!email || !password) {
-      setMessage('Please enter both email and password.');
+    if (!validateAll()) {
+      setMessage('Please resolve the errors highlighted below.');
       setIsSuccess(false);
       return;
     }
-  const derivedName = email.split('@')[0];
+
+    const derivedName = formData.email.split('@')[0];
     const formattedName = derivedName.charAt(0).toUpperCase() + derivedName.slice(1);
 
     const userData = {
       name: formattedName,
-      email: email
+      email: formData.email
     };
 
     setMessage('Login successful! Redirecting to Home...');
     setIsSuccess(true);
 
-    if (onLogin) {
-      onLogin(userData);
+    if (handleAuthLogin) {
+      handleAuthLogin(userData);
     }
 
     setTimeout(() => {
       navigate('/home');
-    }, 1000);
+    }, 800);
   };
 
   return (
@@ -56,36 +106,36 @@ function Login({ onLogin }) {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="auth-form">
-            <div className="form-group">
-              <label htmlFor="email">Email Address</label>
-              <div className="input-wrapper">
-                <Mail size={18} className="input-icon" />
-                <input
-                  type="email"
-                  id="email"
-                  placeholder="name@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
+          <form onSubmit={handleSubmit} className="auth-form" noValidate>
+            <FormField
+              id="email"
+              name="email"
+              label="Email Address"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              placeholder="name@example.com"
+              required
+              autoComplete="email"
+              icon={<Mail size={18} className="input-icon" />}
+              error={touched.email ? errors.email : ''}
+            />
 
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <div className="input-wrapper">
-                <Lock size={18} className="input-icon" />
-                <input
-                  type="password"
-                  id="password"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
+            <FormField
+              id="password"
+              name="password"
+              label="Password"
+              type="password"
+              value={formData.password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              placeholder="Enter your password"
+              required
+              autoComplete="current-password"
+              icon={<Lock size={18} className="input-icon" />}
+              error={touched.password ? errors.password : ''}
+            />
 
             <button type="submit" className="btn-primary auth-submit-btn">
               Log In
