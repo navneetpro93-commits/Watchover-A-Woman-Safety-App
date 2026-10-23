@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { 
   Phone, 
   Shield, 
+  ShieldAlert,
   HeartHandshake, 
   Search, 
   Copy, 
@@ -246,39 +247,65 @@ function EmergencyNumbers() {
 
   return (
     <div className="emergency-numbers-page">
-      {/* 1. Header Banner */}
+      {/* 1. Integrated Hero & Emergency Command Deck */}
       <section className="emergency-hero-section">
         <div className="container">
-          <div className="emergency-hero-badge">
-            <LifeBuoy size={16} /> Verified Emergency Directory
-          </div>
-          <h1 className="emergency-hero-title">Emergency & Safety Helplines</h1>
-          <p className="emergency-hero-subtitle">
-            Instant 24/7 access to national women safety helplines, rapid police response, 
-            medical aid, and verified NGO crisis support centers across India.
-          </p>
+          
+          {/* Top Row: Hero Information (Left) & Speed-Dial Cards (Right) */}
+          <div className="emergency-hero-grid">
+            <div className="emergency-hero-info">
+              <div className="emergency-hero-badge">
+                <ShieldAlert size={16} /> 24/7 Verified Emergency Directory
+              </div>
+              <h1 className="emergency-hero-title">
+                Emergency & Safety <span className="highlight-text">Helplines</span>
+              </h1>
+              <p className="emergency-hero-subtitle">
+                Instant one-tap direct calling for women safety, police rapid dispatch, transit protection, and verified crisis counseling across India.
+              </p>
+            </div>
 
-          {/* Emergency Alert Advice Bar */}
-          <div className="emergency-notice-banner">
-            <AlertCircle size={20} className="notice-icon" />
-            <div className="notice-text">
-              <strong>Immediate Life Threat?</strong> Call <strong>112</strong> (National Unified Emergency) 
-              or <strong>1091</strong> (Women Helpline) immediately for on-ground police dispatch.
+            {/* Quick Priority Speed-Dial Cards */}
+            <div className="emergency-speed-dials">
+              {/* Speed Dial 1: 112 */}
+              <div className="speed-dial-card priority-112">
+                <div className="speed-dial-top">
+                  <span className="speed-dial-badge">National Unified</span>
+                  <span className="speed-dial-live">● 24/7 Active</span>
+                </div>
+                <div className="speed-dial-content">
+                  <div className="speed-dial-number">112</div>
+                  <div className="speed-dial-label">Police, Fire & Ambulance</div>
+                </div>
+                <a href="tel:112" className="speed-dial-btn dial-red">
+                  <PhoneCall size={16} /> Call 112
+                </a>
+              </div>
+
+              {/* Speed Dial 2: 1091 */}
+              <div className="speed-dial-card priority-1091">
+                <div className="speed-dial-top">
+                  <span className="speed-dial-badge">Women Helpline</span>
+                  <span className="speed-dial-live">● Toll-Free</span>
+                </div>
+                <div className="speed-dial-content">
+                  <div className="speed-dial-number">1091</div>
+                  <div className="speed-dial-label">Harassment & Distress Rescue</div>
+                </div>
+                <a href="tel:1091" className="speed-dial-btn dial-rose">
+                  <PhoneCall size={16} /> Call 1091
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* 2. Controls Section: Search & Category Filters */}
-      <section className="emergency-controls-section">
-        <div className="container">
-          <div className="emergency-controls-card">
-            {/* Search Input Bar */}
+          {/* Unified Search & Category Filter Command Bar */}
+          <div className="emergency-controls-panel">
             <div className="emergency-search-bar">
               <Search size={18} className="search-icon" />
               <input 
                 type="text" 
-                placeholder="Search helpline name, authority, or number (e.g. 1091, Police, Cyber, NGO)..."
+                placeholder="Search by name, authority, or number (e.g. 1091, Police, Cyber, Legal, NCW)..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="emergency-search-input"
@@ -296,11 +323,7 @@ function EmergencyNumbers() {
               )}
             </div>
 
-            {/* Category Filter Tabs */}
-            <div className="emergency-filter-tabs">
-              <span className="filter-label">
-                <Filter size={15} /> Filter Category:
-              </span>
+            <div className="emergency-filter-row">
               <div className="filter-buttons-group">
                 {categories.map((category) => (
                   <button
@@ -313,13 +336,12 @@ function EmergencyNumbers() {
                   </button>
                 ))}
               </div>
-            </div>
-
-            {/* Live Count Indicator */}
-            <div className="emergency-results-count">
-              Showing <strong>{filteredContacts.length}</strong> of {emergencyContacts.length} verified safety services
+              <div className="emergency-results-pill">
+                Showing <strong>{filteredContacts.length}</strong> of {emergencyContacts.length} verified services
+              </div>
             </div>
           </div>
+
         </div>
       </section>
 
