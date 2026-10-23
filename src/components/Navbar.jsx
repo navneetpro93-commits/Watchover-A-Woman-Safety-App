@@ -113,6 +113,15 @@ function Navbar({
                 </li>
                 <li>
                   <NavLink 
+                    to="/emergency-numbers" 
+                    className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'} 
+                    onClick={closeMenu}
+                  >
+                    Helplines
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink 
                     to="/about" 
                     className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'} 
                     onClick={closeMenu}
@@ -148,6 +157,15 @@ function Navbar({
                     onClick={closeMenu}
                   >
                     About WatchOver
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink 
+                    to="/emergency-numbers" 
+                    className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'} 
+                    onClick={closeMenu}
+                  >
+                    Helplines
                   </NavLink>
                 </li>
                 <li>

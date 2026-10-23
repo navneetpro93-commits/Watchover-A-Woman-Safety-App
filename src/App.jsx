@@ -14,6 +14,7 @@ import SafetyTips from './pages/SafetyTips';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import NotFound from './pages/NotFound';
+import EmergencyNumbers from './pages/EmergencyNumbers';
 import SosModal from './components/SosModal';
 
 import { ThemeProvider, useTheme } from './context/ThemeContext';
@@ -38,6 +39,14 @@ function AppContent() {
           <Route 
             path="/about" 
             element={<About isAuthenticated={isAuthenticated} />} 
+          />
+          <Route 
+            path="/emergency-numbers" 
+            element={<EmergencyNumbers />} 
+          />
+          <Route 
+            path="/helplines" 
+            element={<Navigate to="/emergency-numbers" replace />} 
           />
           <Route 
             path="/login" 
