@@ -84,19 +84,8 @@ const initialCatalog = [
 
 const initialState = {
   catalog: initialCatalog,
-  // User's active safety kit (cart)
-  items: [
-    {
-      ...initialCatalog[0],
-      quantity: 1,
-      isPacked: true
-    },
-    {
-      ...initialCatalog[1],
-      quantity: 1,
-      isPacked: false
-    }
-  ],
+  // User's active safety kit starts empty until user selects items
+  items: [],
   filterCategory: 'All'
 };
 

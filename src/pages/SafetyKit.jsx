@@ -100,15 +100,14 @@ function SafetyKit() {
       {/* 1. Header Banner */}
       <section className="safety-kit-hero">
         <div className="container">
-          <div className="hero-badge">
-            <Layers size={16} /> Redux Toolkit State Architecture (CE2 Syllabus)
+          <div className="hero-badge hero-store-badge">
+            🛡️ 🎒 Verified Safety Essentials • 1-Click Emergency Kit Store ⚡ 🛒
           </div>
           <h1 className="safety-kit-title">
             Personal Safety Gear & <span className="highlight-text">Kit Builder</span>
           </h1>
           <p className="safety-kit-subtitle">
-            Configure your commute and travel emergency kit. Powered by a centralized 
-            <strong> Redux Toolkit</strong> store demonstrating slices, reducers, and selectors.
+            Equip yourself with essential personal defense and emergency gear. Add items to your kit, customize quantities, and stay prepared for safe daily commutes & solo travel! ✨
           </p>
 
           {/* Quick Stats Metrics Bar */}
