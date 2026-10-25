@@ -9,7 +9,6 @@ import {
   CheckCircle2, 
   Circle, 
   RotateCcw, 
-  Layers, 
   Sparkles,
   AlertTriangle,
   PackageCheck,
@@ -21,7 +20,9 @@ import {
   BatteryCharging,
   Lock,
   CreditCard,
-  Check
+  Check,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import {
   selectCatalog,
@@ -55,6 +56,7 @@ function SafetyKit() {
 
   const [activeCategory, setActiveCategory] = useState('All');
   const [notification, setNotification] = useState('');
+  const [isKitExpanded, setIsKitExpanded] = useState(true);
 
   // Extract unique categories for filter tabs
   const categories = ['All', ...new Set(catalog.map((item) => item.category))];
@@ -86,10 +88,11 @@ function SafetyKit() {
     }
   };
 
-  // Flash feedback notification on dispatch
+  // Flash feedback notification on dispatch & auto-expand kit at top
   const handleAddItem = (item) => {
     dispatch(addToKit(item));
-    setNotification(`Added "${item.name}" to your Safety Kit`);
+    setIsKitExpanded(true);
+    setNotification(`Added "${item.name}" to your Emergency Kit at the top`);
     setTimeout(() => {
       setNotification('');
     }, 2500);
@@ -139,16 +142,181 @@ function SafetyKit() {
         </div>
       </section>
 
-      {/* 2. Main Two-Column Layout: Catalog (Left) + Cart Summary (Right) */}
+      {/* Main Container */}
       <div className="container safety-kit-container">
         
-        {/* Left Column: Gear Catalog */}
-        <section className="kit-catalog-section">
+        {/* 1. TOP SECTION: Expandable My Emergency Kit Panel */}
+        <section className={`top-emergency-kit-panel ${isKitExpanded ? 'expanded' : 'collapsed'}`}>
+          <div className="top-kit-header" onClick={() => setIsKitExpanded(!isKitExpanded)}>
+            <div className="top-kit-title-group">
+              <div className="top-kit-icon-badge">
+                <ShoppingBag size={22} />
+              </div>
+              <div>
+                <div className="top-kit-headline">
+                  <h3>My Emergency Safety Kit</h3>
+                  <span className="cart-count-badge">{totalQuantity} Items</span>
+                </div>
+                <p className="top-kit-subtext">
+                  {kitItems.length === 0 
+                    ? "Your kit is currently empty. Add essentials from the catalog below."
+                    : `${packedCount} of ${kitItems.length} packed in travel bag • Total: ₹${totalCost}`}
+                </p>
+              </div>
+            </div>
+
+            <div className="top-kit-header-actions">
+              {kitItems.length > 0 && (
+                <div className="top-kit-quick-metrics">
+                  <span className="quick-metric-val">₹{totalCost}</span>
+                  <span className="quick-readiness-badge">
+                    {Math.round((packedCount / kitItems.length) * 100)}% Ready
+                  </span>
+                </div>
+              )}
+              <button 
+                type="button" 
+                className="top-kit-toggle-btn" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsKitExpanded(!isKitExpanded);
+                }}
+                aria-label={isKitExpanded ? "Collapse Emergency Kit" : "Expand Emergency Kit"}
+              >
+                {isKitExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                <span>{isKitExpanded ? "Hide Kit" : "View Kit"}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Expandable Body */}
+          {isKitExpanded && (
+            <div className="top-kit-body">
+              {kitItems.length === 0 ? (
+                <div className="top-kit-empty">
+                  <AlertTriangle size={28} className="empty-icon" />
+                  <div>
+                    <h4>Your Emergency Kit is Currently Empty</h4>
+                    <p>Browse the vetted safety products below and click <strong>"Add to Kit"</strong> to assemble your emergency gear.</p>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {/* Readiness Progress Bar */}
+                  <div className="kit-packed-meter top-packed-meter">
+                    <div className="meter-header">
+                      <span><PackageCheck size={16} /> Bag Packing Checklist:</span>
+                      <strong>{packedCount} of {kitItems.length} items packed in bag</strong>
+                    </div>
+                    <div className="meter-track">
+                      <div 
+                        className="meter-fill" 
+                        style={{ width: `${(packedCount / kitItems.length) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Active Kit Items in a Responsive Grid */}
+                  <div className="top-kit-items-grid">
+                    {kitItems.map((item) => (
+                      <div key={item.id} className="top-kit-item-card">
+                        <div className="top-kit-item-main">
+                          <button
+                            type="button"
+                            className="packed-toggle-btn"
+                            onClick={() => dispatch(togglePackedStatus(item.id))}
+                            title={item.isPacked ? "Mark as unpacked" : "Mark as packed in bag"}
+                          >
+                            {item.isPacked ? (
+                              <CheckCircle2 size={20} className="packed-check active" />
+                            ) : (
+                              <Circle size={20} className="packed-check" />
+                            )}
+                          </button>
+                          
+                          <div className="top-kit-item-details">
+                            <span className={`top-item-title ${item.isPacked ? 'packed' : ''}`}>
+                              {item.name}
+                            </span>
+                            <span className="top-item-price-tag">
+                              ₹{item.price} each &bull; Total: <strong>₹{item.price * item.quantity}</strong>
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Quantity and Remove */}
+                        <div className="top-kit-item-controls">
+                          <div className="quantity-controller">
+                            <button
+                              type="button"
+                              onClick={() => dispatch(decrementQuantity(item.id))}
+                              className="qty-btn"
+                              title="Decrease quantity"
+                            >
+                              <Minus size={13} />
+                            </button>
+                            <span className="qty-value">{item.quantity}</span>
+                            <button
+                              type="button"
+                              onClick={() => dispatch(incrementQuantity(item.id))}
+                              className="qty-btn"
+                              title="Increase quantity"
+                            >
+                              <Plus size={13} />
+                            </button>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => dispatch(removeFromKit(item.id))}
+                            className="btn-remove-item"
+                            title="Remove from safety kit"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Bottom Actions Row */}
+                  <div className="top-kit-footer">
+                    <div className="top-kit-footer-stats">
+                      <span>Total Gear: <strong>{totalQuantity} items</strong></span>
+                      <span className="divider-dot">•</span>
+                      <span>Estimated Kit Value: <strong className="highlight-price">₹{totalCost}</strong></span>
+                    </div>
+
+                    <div className="top-kit-footer-actions">
+                      <button
+                        type="button"
+                        onClick={() => dispatch(clearKit())}
+                        className="btn-clear-kit"
+                      >
+                        <RotateCcw size={15} /> Clear Kit
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => alert(`Safety Kit confirmed! ${totalQuantity} items ready. Total estimated value: ₹${totalCost}.`)}
+                        className="btn-confirm-kit"
+                      >
+                        <ShieldCheck size={17} /> Confirm & Save Kit
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+        </section>
+
+        {/* 2. BELOW: Recommended Safety Gear Catalog (Full Width) */}
+        <section className="kit-catalog-section full-width-catalog">
           <div className="catalog-header-row">
             <div>
-              <h2 className="section-title">Recommended Safety Gear</h2>
+              <h2 className="section-title">Recommended Safety Gear (Catalog)</h2>
               <p className="section-subtitle">
-                Select vetted personal defense and transit preparedness equipment.
+                Select vetted personal defense and transit preparedness equipment to add to your kit above.
               </p>
             </div>
 
@@ -167,10 +335,9 @@ function SafetyKit() {
             </div>
           </div>
 
-          {/* Catalog Cards Grid */}
-          <div className="catalog-grid">
+          {/* Full-Width Catalog Cards Grid */}
+          <div className="catalog-grid catalog-grid-full">
             {filteredCatalog.map((item) => {
-              // Check if item already exists in Redux kit
               const inKitItem = kitItems.find((k) => k.id === item.id);
 
               return (
@@ -202,7 +369,7 @@ function SafetyKit() {
                       type="button"
                       className={`btn-add-to-kit ${inKitItem ? 'already-in-kit' : ''}`}
                       onClick={() => handleAddItem(item)}
-                      title="Dispatch addToKit action to Redux store"
+                      title="Add to Emergency Kit at top"
                     >
                       {inKitItem ? <Check size={16} /> : <Plus size={16} />}
                       <span>{inKitItem ? `In Kit (${inKitItem.quantity})` : 'Add to Kit'}</span>
@@ -214,182 +381,7 @@ function SafetyKit() {
           </div>
         </section>
 
-        {/* Right Column: Redux Shopping Cart / Safety Kit Summary */}
-        <aside className="kit-cart-sidebar">
-          <div className="kit-cart-card">
-            
-            <div className="kit-cart-header">
-              <div className="cart-title-row">
-                <ShoppingBag size={20} className="cart-icon" />
-                <h3>My Emergency Kit</h3>
-              </div>
-              <span className="cart-count-badge">{totalQuantity} Items</span>
-            </div>
-
-            {/* Progress / Packed Checklist Tracker */}
-            {kitItems.length > 0 && (
-              <div className="kit-packed-meter">
-                <div className="meter-header">
-                  <span><PackageCheck size={14} /> Readiness Checklist:</span>
-                  <strong>{packedCount} of {kitItems.length} packed</strong>
-                </div>
-                <div className="meter-track">
-                  <div 
-                    className="meter-fill" 
-                    style={{ width: `${kitItems.length > 0 ? (packedCount / kitItems.length) * 100 : 0}%` }}
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Cart Items List */}
-            {kitItems.length === 0 ? (
-              <div className="cart-empty-state">
-                <AlertTriangle size={32} className="empty-icon" />
-                <h4>Your kit is empty</h4>
-                <p>Add recommended safety items from the catalog on the left.</p>
-              </div>
-            ) : (
-              <div className="cart-items-list">
-                {kitItems.map((item) => (
-                  <div key={item.id} className="cart-item-row">
-                    <div className="cart-item-info">
-                      <div className="cart-item-name-row">
-                        <button
-                          type="button"
-                          className="packed-toggle-btn"
-                          onClick={() => dispatch(togglePackedStatus(item.id))}
-                          title={item.isPacked ? "Mark as unpacked" : "Mark as packed in bag"}
-                        >
-                          {item.isPacked ? (
-                            <CheckCircle2 size={16} className="packed-check active" />
-                          ) : (
-                            <Circle size={16} className="packed-check" />
-                          )}
-                        </button>
-                        <span className={`cart-item-title ${item.isPacked ? 'packed' : ''}`}>
-                          {item.name}
-                        </span>
-                      </div>
-                      <div className="cart-item-meta">
-                        ₹{item.price} each &bull; <strong>₹{item.price * item.quantity}</strong>
-                      </div>
-                    </div>
-
-                    {/* Quantity Modifier Buttons */}
-                    <div className="cart-item-actions">
-                      <div className="quantity-controller">
-                        <button
-                          type="button"
-                          onClick={() => dispatch(decrementQuantity(item.id))}
-                          className="qty-btn"
-                          title="Decrease quantity"
-                        >
-                          <Minus size={13} />
-                        </button>
-                        <span className="qty-value">{item.quantity}</span>
-                        <button
-                          type="button"
-                          onClick={() => dispatch(incrementQuantity(item.id))}
-                          className="qty-btn"
-                          title="Increase quantity"
-                        >
-                          <Plus size={13} />
-                        </button>
-                      </div>
-
-                      {/* Remove Button */}
-                      <button
-                        type="button"
-                        onClick={() => dispatch(removeFromKit(item.id))}
-                        className="btn-remove-item"
-                        title="Remove from safety kit"
-                      >
-                        <Trash2 size={15} />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Cart Financial Summary & Actions */}
-            {kitItems.length > 0 && (
-              <div className="cart-summary-footer">
-                <div className="summary-line">
-                  <span>Total Gear Quantity:</span>
-                  <strong>{totalQuantity} units</strong>
-                </div>
-                <div className="summary-line total-price-line">
-                  <span>Estimated Kit Cost:</span>
-                  <span className="total-price-val">₹{totalCost}</span>
-                </div>
-
-                <div className="cart-buttons-group">
-                  <button
-                    type="button"
-                    onClick={() => dispatch(clearKit())}
-                    className="btn-clear-kit"
-                  >
-                    <RotateCcw size={15} /> Clear Kit
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => alert(`Safety Kit confirmed! ${totalQuantity} items ready. Total estimated cost: ₹${totalCost}.`)}
-                    className="btn-confirm-kit"
-                  >
-                    <ShieldCheck size={17} /> Confirm Kit
-                  </button>
-                </div>
-              </div>
-            )}
-
-          </div>
-        </aside>
-
       </div>
-
-      {/* 3. Academic Syllabus Architectural Explanation */}
-      <section className="container kit-architecture-section">
-        <div className="about-section-box">
-          <div className="section-box-header">
-            <div className="feature-icon bg-purple">
-              <Layers size={24} />
-            </div>
-            <div>
-              <h3>How Redux Toolkit Powers This Webpage</h3>
-              <p>Key syllabus concepts demonstrated in this feature:</p>
-            </div>
-          </div>
-
-          <div className="tech-cards-grid">
-            <div className="tech-badge-card">
-              <div className="tech-name">createSlice()</div>
-              <div className="tech-desc">
-                Defines reducer logic & automatically generates action creators in <code>safetyKitSlice.jsx</code>.
-              </div>
-            </div>
-            <div className="tech-badge-card">
-              <div className="tech-name">configureStore()</div>
-              <div className="tech-desc">
-                Configures the central Redux store with default middleware and devtools integration.
-              </div>
-            </div>
-            <div className="tech-badge-card">
-              <div className="tech-name">useSelector()</div>
-              <div className="tech-desc">
-                Subscribes to specific state pieces (total quantity, cost, items) with optimized re-renders.
-              </div>
-            </div>
-            <div className="tech-badge-card">
-              <div className="tech-name">useDispatch()</div>
-              <div className="tech-desc">
-                Dispatches immutable actions (<code>addToKit</code>, <code>decrementQuantity</code>) to update state.
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
