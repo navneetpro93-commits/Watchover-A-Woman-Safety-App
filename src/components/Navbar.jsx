@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
-import { Shield, Menu, X, LogOut, Settings as SettingsIcon, Sun, Moon, Radio } from 'lucide-react';
+import { Shield, Menu, X, LogOut, Settings as SettingsIcon, Sun, Moon, Radio, ShoppingBag } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { selectTotalQuantity } from '../store/safetyKitSlice';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
@@ -27,6 +29,7 @@ function Navbar({
   const onToggleDarkMode = propToggleDark || contextToggleDark;
   const onLogout = propOnLogout || contextLogout;
 
+  const kitCount = useSelector(selectTotalQuantity);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -109,6 +112,16 @@ function Navbar({
                     onClick={closeMenu}
                   >
                     Safety Tips
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink 
+                    to="/safety-kit" 
+                    className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link nav-link-kit'} 
+                    onClick={closeMenu}
+                  >
+                    <span>Safety Kit</span>
+                    {kitCount > 0 && <span className="nav-kit-badge">{kitCount}</span>}
                   </NavLink>
                 </li>
                 <li>

@@ -15,6 +15,7 @@ import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import NotFound from './pages/NotFound';
 import EmergencyNumbers from './pages/EmergencyNumbers';
+import SafetyKit from './pages/SafetyKit';
 import SosModal from './components/SosModal';
 
 import { ThemeProvider, useTheme } from './context/ThemeContext';
@@ -91,6 +92,14 @@ function AppContent() {
             element={
               <ProtectedRoute>
                 <SafetyTips />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/safety-kit" 
+            element={
+              <ProtectedRoute>
+                <SafetyKit />
               </ProtectedRoute>
             } 
           />
