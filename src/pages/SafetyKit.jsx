@@ -314,7 +314,7 @@ function SafetyKit() {
             <div className="tech-badge-card">
               <div className="tech-name">createSlice()</div>
               <div className="tech-desc">
-                Defines reducer logic & automatically generates action creators in <code>safetyKitSlice.js</code>.
+                Defines reducer logic & automatically generates action creators in <code>safetyKitSlice.jsx</code>.
               </div>
             </div>
             <div className="tech-badge-card">
