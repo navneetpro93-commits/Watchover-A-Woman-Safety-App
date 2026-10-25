@@ -24,8 +24,25 @@ import { useAuth } from '../context/AuthContext';
  * - Automated personal emergency contact notification & live dispatch status
  * - Consuming global AuthContext for user emergency contacts
  */
-function SosModal({ isOpen, onClose }) {
-  const { user } = useAuth();
+function SosModal({ isOpen, onClose, user: propUser }) {
+  let contextUser = null;
+  try {
+    const auth = useAuth();
+    if (auth) contextUser = auth.user;
+  } catch (e) {
+    // AuthContext may not be active
+  }
+
+  const savedUser = (() => {
+    try {
+      const saved = localStorage.getItem('watchover_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  })();
+
+  const user = propUser || contextUser || savedUser;
   const [isSirenActive, setIsSirenActive] = useState(true);
   const [dispatchStatus, setDispatchStatus] = useState('broadcasting'); // 'broadcasting' | 'delivered'
   const [notifiedMap, setNotifiedMap] = useState({});

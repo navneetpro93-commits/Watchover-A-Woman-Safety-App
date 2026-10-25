@@ -10,8 +10,11 @@ import Signup from './pages/Signup';
 import Home from './pages/Home';
 import Services from './pages/Services';
 import SafetyTips from './pages/SafetyTips';
+import SafetyKit from './pages/SafetyKit';
+import EmergencyNumbers from './pages/EmergencyNumbers';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
+import SosModal from './components/SosModal';
 
 /**
  * Main Application Component
@@ -26,6 +29,9 @@ function App() {
     const savedUser = localStorage.getItem('watchover_user');
     return savedUser ? JSON.parse(savedUser) : null;
   });
+
+  // Emergency SOS distress modal state
+  const [isSosOpen, setIsSosOpen] = useState(false);
 
   // Dark mode theme state
   const [darkMode, setDarkMode] = useState(() => {
@@ -87,6 +93,7 @@ function App() {
         onLogout={handleLogout} 
         darkMode={darkMode}
         onToggleDarkMode={handleToggleDarkMode}
+        onOpenSos={() => setIsSosOpen(true)}
       />
       <main>
         <Routes>
@@ -94,6 +101,18 @@ function App() {
           <Route 
             path="/about" 
             element={<About isAuthenticated={isAuthenticated} />} 
+          />
+          <Route 
+            path="/helpline" 
+            element={<EmergencyNumbers />} 
+          />
+          <Route 
+            path="/helplines" 
+            element={<Navigate to="/helpline" replace />} 
+          />
+          <Route 
+            path="/emergency-numbers" 
+            element={<Navigate to="/helpline" replace />} 
           />
           <Route 
             path="/login" 
@@ -134,6 +153,14 @@ function App() {
             } 
           />
           <Route 
+            path="/safety-kit" 
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <SafetyKit />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
             path="/profile" 
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
@@ -169,6 +196,11 @@ function App() {
         </Routes>
       </main>
       <Footer />
+      <SosModal 
+        isOpen={isSosOpen} 
+        onClose={() => setIsSosOpen(false)} 
+        user={user}
+      />
     </Router>
   );
 }

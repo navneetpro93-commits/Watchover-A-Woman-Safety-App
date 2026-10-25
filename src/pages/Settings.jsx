@@ -16,8 +16,10 @@ import {
   Plus,
   Trash2,
   AlertCircle,
-  ArrowRightLeft
+  ArrowRightLeft,
+  Globe
 } from 'lucide-react';
+import { useLanguage } from '../utils/useLanguage';
 
 /**
  * Settings Page Component
@@ -34,6 +36,7 @@ import {
  * @param {Function} props.onToggleDarkMode - Callback function to toggle theme
  */
 function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
+  const { language, setLanguage, t } = useLanguage();
   const [activeTab, setActiveTab] = useState('profile');
   const [selectedTheme, setSelectedTheme] = useState(darkMode ? 'dark' : 'light');
 
@@ -146,7 +149,7 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
       onUpdateUser(updatedUser);
     }
 
-    setSuccessMessage('Settings updated successfully!');
+    setSuccessMessage(t.settings.saveSuccess);
     setTimeout(() => {
       setSuccessMessage('');
     }, 3000);
@@ -159,11 +162,11 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
         <div className="compact-settings-header">
           <div className="compact-title-group">
             <SettingsIcon size={24} className="compact-settings-icon" />
-            <h1 className="compact-settings-title">Settings</h1>
+            <h1 className="compact-settings-title">{t.settings.title}</h1>
           </div>
 
           <button onClick={handleSaveSettings} className="btn-primary compact-save-btn">
-            <Save size={18} /> Save Changes
+            <Save size={18} /> {t.settings.saveBtn}
           </button>
         </div>
 
@@ -191,28 +194,35 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
               className={`sidebar-tab-btn ${activeTab === 'profile' ? 'active' : ''}`}
               onClick={() => setActiveTab('profile')}
             >
-              <User size={22} /> Profile & Contacts
+              <User size={22} /> {t.settings.tabProfile}
             </button>
 
             <button 
               className={`sidebar-tab-btn ${activeTab === 'emergency' ? 'active' : ''}`}
               onClick={() => setActiveTab('emergency')}
             >
-              <ShieldAlert size={22} /> Emergency Contacts ({emergencyContacts.length})
+              <ShieldAlert size={22} /> {t.settings.tabContacts} ({emergencyContacts.length})
+            </button>
+
+            <button 
+              className={`sidebar-tab-btn ${activeTab === 'language' ? 'active' : ''}`}
+              onClick={() => setActiveTab('language')}
+            >
+              <Globe size={22} /> {t.settings.tabLanguage}
             </button>
 
             <button 
               className={`sidebar-tab-btn ${activeTab === 'appearance' ? 'active' : ''}`}
               onClick={() => setActiveTab('appearance')}
             >
-              <Sliders size={22} /> Appearance & Theme
+              <Sliders size={22} /> {t.settings.tabAppearance}
             </button>
 
             <button 
               className={`sidebar-tab-btn ${activeTab === 'privacy' ? 'active' : ''}`}
               onClick={() => setActiveTab('privacy')}
             >
-              <Bell size={22} /> Notifications & Privacy
+              <Bell size={22} /> {t.settings.tabPrivacy}
             </button>
           </div>
 
@@ -420,7 +430,97 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
                 </div>
               )}
 
-              {/* Tab 3: Appearance & Theme */}
+              {/* Tab 3: Platform Language Selection */}
+              {(activeTab === 'language' || activeTab === 'all') && (
+                <div className="prof-settings-card">
+                  <div className="prof-card-title">
+                    <Globe size={22} className="card-title-icon" />
+                    <div>
+                      <h3>{t.settings.languageCardTitle}</h3>
+                      <p>{t.settings.languageCardDesc}</p>
+                    </div>
+                  </div>
+
+                  <div className="theme-radio-grid">
+                    {/* English */}
+                    <label 
+                      className={`theme-radio-card ${language === 'en' ? 'selected' : ''}`}
+                      onClick={() => setLanguage('en')}
+                    >
+                      <div className="radio-card-top">
+                        <input
+                          type="radio"
+                          name="languageChoice"
+                          value="en"
+                          checked={language === 'en'}
+                          onChange={() => setLanguage('en')}
+                          className="theme-radio-input"
+                        />
+                        <div className="radio-icon-box light-box" style={{ fontSize: '1.4rem' }}>
+                          🇬🇧
+                        </div>
+                        {language === 'en' && (
+                          <span className="selected-check-badge"><Check size={14} /> {t.settings.activeBadge}</span>
+                        )}
+                      </div>
+                      <h4>{t.settings.langEnTitle}</h4>
+                      <p>{t.settings.langEnDesc}</p>
+                    </label>
+
+                    {/* Hindi */}
+                    <label 
+                      className={`theme-radio-card ${language === 'hi' ? 'selected' : ''}`}
+                      onClick={() => setLanguage('hi')}
+                    >
+                      <div className="radio-card-top">
+                        <input
+                          type="radio"
+                          name="languageChoice"
+                          value="hi"
+                          checked={language === 'hi'}
+                          onChange={() => setLanguage('hi')}
+                          className="theme-radio-input"
+                        />
+                        <div className="radio-icon-box light-box" style={{ fontSize: '1.4rem' }}>
+                          🇮🇳
+                        </div>
+                        {language === 'hi' && (
+                          <span className="selected-check-badge"><Check size={14} /> {t.settings.activeBadge}</span>
+                        )}
+                      </div>
+                      <h4>{t.settings.langHiTitle}</h4>
+                      <p>{t.settings.langHiDesc}</p>
+                    </label>
+
+                    {/* Punjabi */}
+                    <label 
+                      className={`theme-radio-card ${language === 'pa' ? 'selected' : ''}`}
+                      onClick={() => setLanguage('pa')}
+                    >
+                      <div className="radio-card-top">
+                        <input
+                          type="radio"
+                          name="languageChoice"
+                          value="pa"
+                          checked={language === 'pa'}
+                          onChange={() => setLanguage('pa')}
+                          className="theme-radio-input"
+                        />
+                        <div className="radio-icon-box light-box" style={{ fontSize: '1.4rem' }}>
+                          🌾
+                        </div>
+                        {language === 'pa' && (
+                          <span className="selected-check-badge"><Check size={14} /> {t.settings.activeBadge}</span>
+                        )}
+                      </div>
+                      <h4>{t.settings.langPaTitle}</h4>
+                      <p>{t.settings.langPaDesc}</p>
+                    </label>
+                  </div>
+                </div>
+              )}
+
+              {/* Tab 4: Appearance & Theme */}
               {(activeTab === 'appearance' || activeTab === 'all') && (
                 <div className="prof-settings-card">
                   <div className="prof-card-title">
@@ -533,7 +633,7 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
               {/* Footer Save Button */}
               <div className="prof-settings-footer">
                 <button type="submit" className="btn-primary" style={{ padding: '14px 32px' }}>
-                  <Save size={18} /> Save All Settings
+                  <Save size={18} /> {t.settings.saveBtn}
                 </button>
               </div>
             </form>

@@ -1,27 +1,77 @@
 import React from 'react';
-import { Shield } from 'lucide-react';
+import { Shield, Users, Crown } from 'lucide-react';
+import { useLanguage } from '../utils/useLanguage';
+import watchoverLogo from '../assets/watchover_logo_edited.jpg';
 
-/**
- * Footer Component
- * Dynamic dark theme styling supporting theme switching.
- */
 function Footer() {
+  const { t } = useLanguage();
+
+  const teamMembers = [
+    { name: 'Divyanshi' },
+    { name: 'Rachit Goyal' },
+    { name: 'Navneet' },
+    { name: 'Hriday Sehgal' }
+  ];
+
   return (
     <footer className="footer">
       <div className="container footer-content">
-        <div className="navbar-logo" style={{ color: 'var(--footer-brand)' }}>
+        <div
+          className="navbar-logo"
+          style={{ color: 'var(--footer-brand)' }}
+        >
           <div className="navbar-logo-icon">
             <Shield size={18} />
           </div>
-          <span className="footer-brand">WatchOver</span>
+
+          <div
+            className="navbar-logo-img-wrapper"
+            style={{ width: '42px', height: '42px' }}
+          >
+            <img
+              src={watchoverLogo}
+              alt="WatchOver Logo"
+              className="navbar-logo-img"
+              onError={(e) => {
+                e.currentTarget.src = '/watchover_logo_edited.jpg';
+              }}
+            />
+          </div>
+
+          <div className="navbar-brand-text-group">
+            <span
+              className="navbar-brand-text"
+              style={{
+                color: 'var(--footer-brand)',
+                fontSize: '1.4rem'
+              }}
+            >
+              Watch<span className="brand-accent">Over</span>
+            </span>
+          </div>
         </div>
-        
+
         <p className="footer-message">
-          Empowering safety through awareness, practical tips, and community vigilance.
+          {t.footer.message}
         </p>
 
+        <div className="footer-team-section">
+          <div className="footer-team-header">
+            <Users size={16} />
+            <span>{t.footer.createdBy}</span>
+          </div>
+
+          <div className="footer-team-grid">
+            {teamMembers.map((member, index) => (
+              <span key={index} className="footer-team-badge">
+                {member.name}
+              </span>
+            ))}
+          </div>
+        </div>
+
         <p className="footer-copy">
-          &copy; 2026 WatchOver &bull; CE1 College Project
+          &copy; 2026 WatchOver
         </p>
       </div>
     </footer>

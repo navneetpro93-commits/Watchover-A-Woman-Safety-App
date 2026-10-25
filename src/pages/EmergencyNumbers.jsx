@@ -15,6 +15,7 @@ import {
   Ambulance,
   LifeBuoy
 } from 'lucide-react';
+import { useLanguage } from '../utils/useLanguage';
 
 /**
  * EmergencyNumbers Component (CE1 & CE2 Syllabus)
@@ -30,6 +31,7 @@ import {
  * - Clipboard copy with instant visual feedback
  */
 function EmergencyNumbers() {
+  const { language } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [copiedId, setCopiedId] = useState(null);
@@ -255,13 +257,24 @@ function EmergencyNumbers() {
           <div className="emergency-hero-grid">
             <div className="emergency-hero-info">
               <div className="emergency-hero-badge">
-                <ShieldAlert size={16} /> 24/7 Verified Emergency Directory
+                <ShieldAlert size={16} /> {
+                  language === 'hi' ? '24/7 सत्यापित आपातकालीन निर्देशिका' :
+                  language === 'pa' ? '24/7 ਪ੍ਰਮਾਣਿਤ ਐਮਰਜੈਂਸੀ ਡਾਇਰੈਕਟਰੀ' :
+                  '24/7 Verified Emergency Directory'
+                }
               </div>
               <h1 className="emergency-hero-title">
-                Emergency & Safety <span className="highlight-text">Helplines</span>
+                {language === 'hi' ? 'आपातकालीन एवं सुरक्षा ' : language === 'pa' ? 'ਐਮਰਜੈਂਸੀ ਅਤੇ ਸੁਰੱਖਿਆ ' : 'Emergency & Safety '}
+                <span className="highlight-text">
+                  {language === 'hi' ? 'हेल्पलाइन' : language === 'pa' ? 'ਹੈਲਪਲਾਈਨ' : 'Helplines'}
+                </span>
               </h1>
               <p className="emergency-hero-subtitle">
-                Instant one-tap direct calling for women safety, police rapid dispatch, transit protection, and verified crisis counseling across India.
+                {
+                  language === 'hi' ? 'महिला सुरक्षा, पुलिस त्वरित प्रतिक्रिया, पारगमन सुरक्षा और सत्यापित संकट परामर्श के लिए त्वरित 1-टैप कॉलिंग।' :
+                  language === 'pa' ? 'ਮਹਿਲਾ ਸੁਰੱਖਿਆ, ਪੁਲਿਸ ਤੁਰੰਤ ਕਾਰਵਾਈ ਅਤੇ ਸੰਕਟ ਸਹਾਇਤਾ ਲਈ ਤੁਰੰਤ ਕਾਲਿੰਗ ਸੁਵਿਧਾ।' :
+                  'Instant one-tap direct calling for women safety, police rapid dispatch, transit protection, and verified crisis counseling across India.'
+                }
               </p>
             </div>
 

@@ -1,38 +1,38 @@
 import React from 'react';
 import { Navigation, Users, Smartphone, ShieldAlert, CheckCircle } from 'lucide-react';
 import ServiceCard from '../components/ServiceCard';
+import { useLanguage } from '../utils/useLanguage';
 
 /**
  * Services Page Component
- * Demonstrates:
- * 1. Rendering list of services using Array.map()
- * 2. Component reusability with ServiceCard
+ * Multilingual supported via useLanguage hook
  */
 function Services() {
-  // Array of services as requested
+  const { t } = useLanguage();
+
   const services = [
     {
       id: 1,
-      title: "Travel Safety",
-      description: "Useful information and awareness guidance for staying safe while travelling on public transport, cabs, and late-night journeys.",
+      title: t.services.travelTitle,
+      description: t.services.travelDesc,
       icon: <Navigation size={28} />
     },
     {
       id: 2,
-      title: "Public Place Safety",
-      description: "Basic awareness tips and environmental vigilance recommendations when navigating public spaces, markets, and gatherings.",
+      title: t.services.publicTitle,
+      description: t.services.publicDesc,
       icon: <Users size={28} />
     },
     {
       id: 3,
-      title: "Online Safety",
-      description: "Basic digital and online safety awareness tips for protecting personal information, passwords, and social media privacy.",
+      title: t.services.onlineTitle,
+      description: t.services.onlineDesc,
       icon: <Smartphone size={28} />
     },
     {
       id: 4,
-      title: "Emergency Preparedness",
-      description: "General information and practical advice about being prepared for unexpected situations and keeping emergency readiness.",
+      title: t.services.emergencyTitle,
+      description: t.services.emergencyDesc,
       icon: <ShieldAlert size={28} />
     }
   ];
@@ -42,9 +42,9 @@ function Services() {
       {/* Page Header */}
       <div className="tips-header text-center">
         <div className="container">
-          <h1 className="section-title">WatchOver Services</h1>
+          <h1 className="section-title">{t.services.title}</h1>
           <p className="section-subtitle">
-            Explore our safety awareness modules designed to keep you informed in every setting.
+            {t.services.subtitle}
           </p>
         </div>
       </div>
@@ -65,12 +65,10 @@ function Services() {
         <div className="about-card" style={{ backgroundColor: '#fff5f5', borderColor: '#fecaca' }}>
           <h3 style={{ color: 'var(--primary)' }}>
             <CheckCircle size={22} />
-            Why Awareness Matters
+            {t.services.whyMattersTitle}
           </h3>
           <p>
-            Safety awareness is the first line of defense. By understanding your surroundings, 
-            maintaining digital security, and keeping emergency protocols ready, you significantly 
-            reduce risks in everyday life.
+            {t.services.whyMattersText}
           </p>
         </div>
       </div>
