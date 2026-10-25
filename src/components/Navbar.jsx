@@ -120,7 +120,7 @@ function Navbar({
                     className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link nav-link-kit'} 
                     onClick={closeMenu}
                   >
-                    <span>Safety Kit</span>
+                    <span>SafetyKit</span>
                     {kitCount > 0 && <span className="nav-kit-badge">{kitCount}</span>}
                   </NavLink>
                 </li>
