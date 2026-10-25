@@ -82,10 +82,41 @@ const initialCatalog = [
   }
 ];
 
+const initialSavedHistory = [
+  {
+    id: 'kit-hist-1',
+    name: 'Late-Night Metro & Commute Kit',
+    savedAt: '24 Oct 2026, 08:30 PM',
+    items: [
+      { id: 'gear-1', name: 'Personal Safety Siren Keychain (130dB)', price: 349, quantity: 1, isPacked: true },
+      { id: 'gear-2', name: 'Self-Defense Pepper Spray (35g Fogger)', price: 299, quantity: 1, isPacked: true },
+      { id: 'gear-5', name: 'Fast-Charging Slim Power Bank (10,000mAh)', price: 899, quantity: 1, isPacked: true }
+    ],
+    totalQuantity: 3,
+    totalCost: 1547,
+    packedCount: 3
+  },
+  {
+    id: 'kit-hist-2',
+    name: 'Solo Travel & Hostel Security Pack',
+    savedAt: '21 Oct 2026, 11:15 AM',
+    items: [
+      { id: 'gear-1', name: 'Personal Safety Siren Keychain (130dB)', price: 349, quantity: 1, isPacked: true },
+      { id: 'gear-4', name: 'Compact Travel First Aid Medical Kit', price: 249, quantity: 1, isPacked: true },
+      { id: 'gear-7', name: 'Portable Hotel Door Jammer & Alarm', price: 599, quantity: 1, isPacked: false }
+    ],
+    totalQuantity: 3,
+    totalCost: 1197,
+    packedCount: 2
+  }
+];
+
 const initialState = {
   catalog: initialCatalog,
   // User's active safety kit starts empty until user selects items
   items: [],
+  // Saved history records of previous emergency kits
+  savedKitsHistory: initialSavedHistory,
   filterCategory: 'All'
 };
 
@@ -138,6 +169,36 @@ export const safetyKitSlice = createSlice({
     clearKit: (state) => {
       state.items = [];
     },
+    saveCurrentKit: (state, action) => {
+      if (state.items.length === 0) return;
+      const customName = action.payload?.name || `Emergency Kit #${state.savedKitsHistory.length + 1}`;
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+      const newHistoryEntry = {
+        id: `kit-hist-${Date.now()}`,
+        name: customName,
+        savedAt: `${dateStr}, ${timeStr}`,
+        items: JSON.parse(JSON.stringify(state.items)),
+        totalQuantity: state.items.reduce((total, item) => total + item.quantity, 0),
+        totalCost: state.items.reduce((total, item) => total + item.price * item.quantity, 0),
+        packedCount: state.items.filter((item) => item.isPacked).length
+      };
+
+      state.savedKitsHistory.unshift(newHistoryEntry);
+    },
+    restoreSavedKit: (state, action) => {
+      const historyId = action.payload;
+      const targetHistory = state.savedKitsHistory.find((entry) => entry.id === historyId);
+      if (targetHistory && targetHistory.items) {
+        state.items = JSON.parse(JSON.stringify(targetHistory.items));
+      }
+    },
+    deleteSavedKit: (state, action) => {
+      const historyId = action.payload;
+      state.savedKitsHistory = state.savedKitsHistory.filter((entry) => entry.id !== historyId);
+    },
     setFilterCategory: (state, action) => {
       state.filterCategory = action.payload;
     }
@@ -152,12 +213,16 @@ export const {
   decrementQuantity,
   togglePackedStatus,
   clearKit,
+  saveCurrentKit,
+  restoreSavedKit,
+  deleteSavedKit,
   setFilterCategory
 } = safetyKitSlice.actions;
 
 // Export Selectors for useSelector consumption
 export const selectCatalog = (state) => state.safetyKit.catalog;
 export const selectKitItems = (state) => state.safetyKit.items;
+export const selectSavedKitsHistory = (state) => state.safetyKit.savedKitsHistory;
 export const selectFilterCategory = (state) => state.safetyKit.filterCategory;
 export const selectTotalQuantity = (state) =>
   state.safetyKit.items.reduce((total, item) => total + item.quantity, 0);

@@ -22,11 +22,16 @@ import {
   CreditCard,
   Check,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  History,
+  Clock,
+  BookmarkPlus,
+  X
 } from 'lucide-react';
 import {
   selectCatalog,
   selectKitItems,
+  selectSavedKitsHistory,
   selectTotalQuantity,
   selectTotalCost,
   selectPackedCount,
@@ -35,7 +40,10 @@ import {
   incrementQuantity,
   decrementQuantity,
   togglePackedStatus,
-  clearKit
+  clearKit,
+  saveCurrentKit,
+  restoreSavedKit,
+  deleteSavedKit
 } from '../store/safetyKitSlice';
 
 /**
@@ -50,6 +58,7 @@ function SafetyKit() {
   const dispatch = useDispatch();
   const catalog = useSelector(selectCatalog);
   const kitItems = useSelector(selectKitItems);
+  const savedKitsHistory = useSelector(selectSavedKitsHistory);
   const totalQuantity = useSelector(selectTotalQuantity);
   const totalCost = useSelector(selectTotalCost);
   const packedCount = useSelector(selectPackedCount);
@@ -57,6 +66,7 @@ function SafetyKit() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [notification, setNotification] = useState('');
   const [isKitExpanded, setIsKitExpanded] = useState(true);
+  const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
 
   // Extract unique categories for filter tabs
   const categories = ['All', ...new Set(catalog.map((item) => item.category))];
@@ -96,6 +106,38 @@ function SafetyKit() {
     setTimeout(() => {
       setNotification('');
     }, 2500);
+  };
+
+  // Save current kit to history
+  const handleSaveCurrentKit = () => {
+    if (kitItems.length === 0) {
+      setNotification('Add at least one safety item before saving to history!');
+      setTimeout(() => setNotification(''), 2500);
+      return;
+    }
+    const defaultName = prompt('Enter a label for this emergency kit:', `Emergency Kit #${savedKitsHistory.length + 1}`);
+    if (defaultName !== null) {
+      const trimmed = defaultName.trim() || `Emergency Kit #${savedKitsHistory.length + 1}`;
+      dispatch(saveCurrentKit({ name: trimmed }));
+      setNotification(`Saved "${trimmed}" to history!`);
+      setTimeout(() => setNotification(''), 2500);
+    }
+  };
+
+  // Restore saved kit from history
+  const handleRestoreKit = (entry) => {
+    dispatch(restoreSavedKit(entry.id));
+    setIsHistoryModalOpen(false);
+    setIsKitExpanded(true);
+    setNotification(`Loaded "${entry.name}" into your active Emergency Kit!`);
+    setTimeout(() => setNotification(''), 2500);
+  };
+
+  // Delete saved kit from history
+  const handleDeleteSavedKit = (id, name) => {
+    dispatch(deleteSavedKit(id));
+    setNotification(`Removed "${name}" from history.`);
+    setTimeout(() => setNotification(''), 2500);
   };
 
   return (
@@ -166,6 +208,20 @@ function SafetyKit() {
             </div>
 
             <div className="top-kit-header-actions">
+              {/* Button to view all saved kits history */}
+              <button 
+                type="button" 
+                className="top-kit-history-btn" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsHistoryModalOpen(true);
+                }}
+                title="View all saved emergency kit history"
+              >
+                <History size={16} />
+                <span>Saved History ({savedKitsHistory.length})</span>
+              </button>
+
               {kitItems.length > 0 && (
                 <div className="top-kit-quick-metrics">
                   <span className="quick-metric-val">₹{totalCost}</span>
@@ -297,7 +353,15 @@ function SafetyKit() {
                       </button>
                       <button
                         type="button"
-                        onClick={() => alert(`Safety Kit confirmed! ${totalQuantity} items ready. Total estimated value: ₹${totalCost}.`)}
+                        onClick={handleSaveCurrentKit}
+                        className="btn-save-kit-history"
+                        title="Save current emergency kit snapshot to history"
+                      >
+                        <BookmarkPlus size={16} /> Save to History
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleSaveCurrentKit}
                         className="btn-confirm-kit"
                       >
                         <ShieldCheck size={17} /> Confirm & Save Kit
@@ -382,6 +446,98 @@ function SafetyKit() {
         </section>
 
       </div>
+
+      {/* 3. Saved Kits History Modal */}
+      {isHistoryModalOpen && (
+        <div className="kit-history-modal-backdrop" onClick={() => setIsHistoryModalOpen(false)}>
+          <div className="kit-history-modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="history-modal-header">
+              <div className="history-modal-title">
+                <History size={22} className="history-icon" />
+                <div>
+                  <h3>Emergency Safety Kits History</h3>
+                  <p>View, restore, or manage your previously saved emergency kit configurations</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="btn-close-modal"
+                onClick={() => setIsHistoryModalOpen(false)}
+                title="Close modal"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="history-modal-body">
+              {savedKitsHistory.length === 0 ? (
+                <div className="history-empty-state">
+                  <Clock size={40} className="empty-clock" />
+                  <h4>No Saved Kits Found</h4>
+                  <p>Assemble your emergency kit items and click "Save to History" or "Confirm & Save Kit" to create a saved snapshot.</p>
+                </div>
+              ) : (
+                <div className="history-cards-list">
+                  {savedKitsHistory.map((kit) => (
+                    <div key={kit.id} className="history-card-item">
+                      <div className="history-card-header">
+                        <div>
+                          <h4 className="history-kit-title">{kit.name}</h4>
+                          <span className="history-kit-date">
+                            <Clock size={13} /> {kit.savedAt}
+                          </span>
+                        </div>
+                        <div className="history-kit-meta">
+                          <span className="history-badge-items">{kit.totalQuantity} Items</span>
+                          <span className="history-badge-cost">₹{kit.totalCost}</span>
+                        </div>
+                      </div>
+
+                      <div className="history-items-chips">
+                        {kit.items.map((item) => (
+                          <span key={item.id} className="history-item-chip">
+                            {item.name} &times; {item.quantity}
+                          </span>
+                        ))}
+                      </div>
+
+                      <div className="history-card-actions">
+                        <button
+                          type="button"
+                          className="btn-restore-history"
+                          onClick={() => handleRestoreKit(kit)}
+                          title="Load this kit into active Emergency Kit"
+                        >
+                          <RotateCcw size={14} /> Restore to Active Kit
+                        </button>
+                        <button
+                          type="button"
+                          className="btn-delete-history"
+                          onClick={() => handleDeleteSavedKit(kit.id, kit.name)}
+                          title="Delete from history"
+                        >
+                          <Trash2 size={14} /> Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="history-modal-footer">
+              <span>{savedKitsHistory.length} saved configuration(s) recorded</span>
+              <button
+                type="button"
+                className="btn-modal-done"
+                onClick={() => setIsHistoryModalOpen(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
