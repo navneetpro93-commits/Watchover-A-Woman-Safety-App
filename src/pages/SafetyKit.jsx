@@ -13,7 +13,15 @@ import {
   Sparkles,
   AlertTriangle,
   PackageCheck,
-  Tag
+  Tag,
+  Volume2,
+  ShieldAlert,
+  Zap,
+  HeartPulse,
+  BatteryCharging,
+  Lock,
+  CreditCard,
+  Check
 } from 'lucide-react';
 import {
   selectCatalog,
@@ -56,6 +64,28 @@ function SafetyKit() {
     ? catalog 
     : catalog.filter((item) => item.category === activeCategory);
 
+  // Icon selector per category
+  const getItemIcon = (category) => {
+    switch (category) {
+      case 'Acoustic Defense':
+        return <Volume2 size={20} />;
+      case 'Personal Protection':
+        return <ShieldAlert size={20} />;
+      case 'Visibility & Illumination':
+        return <Zap size={20} />;
+      case 'Medical Emergency':
+        return <HeartPulse size={20} />;
+      case 'Device Reliability':
+        return <BatteryCharging size={20} />;
+      case 'Accommodation Safety':
+        return <Lock size={20} />;
+      case 'Digital Security':
+        return <CreditCard size={20} />;
+      default:
+        return <ShieldCheck size={20} />;
+    }
+  };
+
   // Flash feedback notification on dispatch
   const handleAddItem = (item) => {
     dispatch(addToKit(item));
@@ -80,6 +110,26 @@ function SafetyKit() {
             Configure your commute and travel emergency kit. Powered by a centralized 
             <strong> Redux Toolkit</strong> store demonstrating slices, reducers, and selectors.
           </p>
+
+          {/* Quick Stats Metrics Bar */}
+          <div className="kit-hero-metrics">
+            <div className="metric-pill">
+              <span className="metric-val">{catalog.length}</span>
+              <span className="metric-label">Catalog Items</span>
+            </div>
+            <div className="metric-pill active-pill">
+              <span className="metric-val">{totalQuantity}</span>
+              <span className="metric-label">Items in Kit</span>
+            </div>
+            <div className="metric-pill">
+              <span className="metric-val">₹{totalCost}</span>
+              <span className="metric-label">Estimated Value</span>
+            </div>
+            <div className="metric-pill">
+              <span className="metric-val">{kitItems.length > 0 ? Math.round((packedCount / kitItems.length) * 100) : 0}%</span>
+              <span className="metric-label">Readiness Score</span>
+            </div>
+          </div>
 
           {/* Flash Notification Toast */}
           {notification && (
@@ -125,14 +175,17 @@ function SafetyKit() {
               const inKitItem = kitItems.find((k) => k.id === item.id);
 
               return (
-                <article key={item.id} className="catalog-card">
+                <article key={item.id} className={`catalog-card ${inKitItem ? 'card-in-kit' : ''}`}>
                   <div className="catalog-card-top">
-                    <span className="catalog-category-tag">{item.category}</span>
+                    <div className="catalog-icon-badge">
+                      {getItemIcon(item.category)}
+                    </div>
                     <span className={`priority-tag priority-${item.priority.toLowerCase()}`}>
                       {item.priority} Priority
                     </span>
                   </div>
 
+                  <span className="catalog-category-tag">{item.category}</span>
                   <h3 className="catalog-item-name">{item.name}</h3>
                   <p className="catalog-item-desc">{item.description}</p>
 
@@ -152,7 +205,7 @@ function SafetyKit() {
                       onClick={() => handleAddItem(item)}
                       title="Dispatch addToKit action to Redux store"
                     >
-                      <Plus size={16} />
+                      {inKitItem ? <Check size={16} /> : <Plus size={16} />}
                       <span>{inKitItem ? `In Kit (${inKitItem.quantity})` : 'Add to Kit'}</span>
                     </button>
                   </div>
