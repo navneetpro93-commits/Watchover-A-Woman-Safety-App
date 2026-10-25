@@ -1,6 +1,12 @@
 node_modules/
+<<<<<<< HEAD
 dist/
 .env
 .env.*
 !.env.example
+=======
+**/node_modules/
+dist/
+.env
+>>>>>>> origin/main
 .DS_Store
