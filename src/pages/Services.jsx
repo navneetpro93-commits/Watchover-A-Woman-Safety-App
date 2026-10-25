@@ -54,6 +54,7 @@ function Services() {
           {services.map((service) => (
             <ServiceCard
               key={service.id}
+              id={service.id}
               title={service.title}
               description={service.description}
               icon={service.icon}
@@ -61,13 +62,17 @@ function Services() {
           ))}
         </div>
 
-        {/* Informational Banner */}
-        <div className="about-card" style={{ backgroundColor: '#fff5f5', borderColor: '#fecaca' }}>
-          <h3 style={{ color: 'var(--primary)' }}>
-            <CheckCircle size={22} />
-            {t.services.whyMattersTitle}
-          </h3>
-          <p>
+        {/* Why Awareness Matters Informational Card */}
+        <div className="services-awareness-card">
+          <div className="services-awareness-header">
+            <div className="services-awareness-icon-box">
+              <CheckCircle size={24} />
+            </div>
+            <h2 className="services-awareness-title">
+              {t.services.whyMattersTitle}
+            </h2>
+          </div>
+          <p className="services-awareness-text">
             {t.services.whyMattersText}
           </p>
         </div>

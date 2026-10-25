@@ -9,11 +9,13 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Home from './pages/Home';
 import Services from './pages/Services';
+import ServiceDetail from './pages/ServiceDetail';
 import SafetyTips from './pages/SafetyTips';
 import SafetyKit from './pages/SafetyKit';
 import EmergencyNumbers from './pages/EmergencyNumbers';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
+import NotFound from './pages/NotFound';
 import SosModal from './components/SosModal';
 
 /**
@@ -103,18 +105,6 @@ function App() {
             element={<About isAuthenticated={isAuthenticated} />} 
           />
           <Route 
-            path="/helpline" 
-            element={<EmergencyNumbers />} 
-          />
-          <Route 
-            path="/helplines" 
-            element={<Navigate to="/helpline" replace />} 
-          />
-          <Route 
-            path="/emergency-numbers" 
-            element={<Navigate to="/helpline" replace />} 
-          />
-          <Route 
             path="/login" 
             element={
               isAuthenticated ? <Navigate to="/home" replace /> : <Login onLogin={handleLogin} />
@@ -129,6 +119,22 @@ function App() {
 
           {/* Protected Routes (Require Login to Access Further) */}
           <Route 
+            path="/helpline" 
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <EmergencyNumbers />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/helplines" 
+            element={<Navigate to="/helpline" replace />} 
+          />
+          <Route 
+            path="/emergency-numbers" 
+            element={<Navigate to="/helpline" replace />} 
+          />
+          <Route 
             path="/home" 
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
@@ -141,6 +147,14 @@ function App() {
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <Services />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/services/:serviceId" 
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <ServiceDetail />
               </ProtectedRoute>
             } 
           />
@@ -188,10 +202,10 @@ function App() {
             element={<Navigate to={isAuthenticated ? "/home" : "/about"} replace />} 
           />
 
-          {/* Catch-all Fallback Redirect */}
+          {/* Catch-all 404 Fallback Route */}
           <Route 
             path="*" 
-            element={<Navigate to={isAuthenticated ? "/home" : "/about"} replace />} 
+            element={<NotFound isAuthenticated={isAuthenticated} />} 
           />
         </Routes>
       </main>

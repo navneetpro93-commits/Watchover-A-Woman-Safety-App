@@ -579,6 +579,70 @@ a {
     line-height: 1.6;
 }
 
+/* Why Awareness Matters Card in Services */
+.services-awareness-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-left: 5px solid var(--primary);
+    border-radius: var(--radius-lg);
+    padding: 32px 36px;
+    box-shadow: var(--shadow-md);
+    margin-top: 10px;
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.services-awareness-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+.services-awareness-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.services-awareness-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background-color: var(--primary-light);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.services-awareness-title {
+    color: var(--secondary);
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.services-awareness-text {
+    color: var(--text-main);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin: 0;
+    font-weight: 450;
+}
+
+@media (max-width: 640px) {
+    .services-awareness-card {
+        padding: 24px 20px;
+    }
+    .services-awareness-title {
+        font-size: 1.2rem;
+    }
+    .services-awareness-text {
+        font-size: 0.96rem;
+    }
+}
+
 
 /* 8. Page: Safety Tips & Component: SafetyCard */
 

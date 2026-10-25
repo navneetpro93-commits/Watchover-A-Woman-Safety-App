@@ -159,17 +159,6 @@ function Navbar({ isAuthenticated, onLogout, darkMode, onToggleDarkMode, onOpenS
               </li>
               <li>
                 <NavLink 
-                  to="/helpline" 
-                  className={({ isActive }) => isActive ? 'nav-link nav-link-helpline active' : 'nav-link nav-link-helpline'} 
-                  onClick={closeMenu}
-                  style={{ whiteSpace: 'nowrap' }}
-                >
-                  <PhoneCall size={14} />
-                  <span>{t.navbar.helpline}</span>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink 
                   to="/login" 
                   className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'} 
                   onClick={closeMenu}
@@ -192,16 +181,18 @@ function Navbar({ isAuthenticated, onLogout, darkMode, onToggleDarkMode, onOpenS
 
         {/* Action Controls Suite (Right Wing) */}
         <div className="navbar-actions-group" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          {/* Prominent Emergency SOS Distress Button */}
-          <button 
-            type="button" 
-            className="nav-sos-btn" 
-            onClick={() => { closeMenu(); if (onOpenSos) onOpenSos(); }}
-            title="Immediate Distress Siren & Personal Emergency Alert"
-          >
-            <Radio size={16} className="nav-sos-icon" />
-            <span>{t.navbar.sosAlert || 'SOS Alert'}</span>
-          </button>
+          {/* Prominent Emergency SOS Distress Button (Available when user has logged in) */}
+          {isAuthenticated && (
+            <button 
+              type="button" 
+              className="nav-sos-btn" 
+              onClick={() => { closeMenu(); if (onOpenSos) onOpenSos(); }}
+              title="Immediate Distress Siren & Personal Emergency Alert"
+            >
+              <Radio size={16} className="nav-sos-icon" />
+              <span>{t.navbar.sosAlert || 'SOS Alert'}</span>
+            </button>
+          )}
 
           {/* Quick Theme Toggle Button */}
           <button 
