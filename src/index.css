@@ -5370,3 +5370,50 @@ input:checked+.toggle-slider:before {
     height: 240px;
   }
 }
+
+
+/* Step 4: SOS GPS Beacon Bar inside SosModal */
+.sos-gps-beacon-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background-color: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 18px;
+  font-size: 0.86rem;
+}
+
+.sos-gps-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--secondary);
+}
+
+.sos-gps-info strong {
+  color: var(--primary);
+}
+
+.sos-gps-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background-color: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid var(--primary-light);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.sos-gps-link-btn:hover {
+  background-color: var(--primary);
+  color: #ffffff;
+}

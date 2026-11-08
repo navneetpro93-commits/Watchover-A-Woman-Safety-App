@@ -12,10 +12,13 @@ import {
   MessageSquare,
   CheckCircle2,
   Clock,
-  Sparkles
+  Sparkles,
+  MapPin,
+  ExternalLink
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { useGeolocation } from '../utils/useGeolocation';
 
 /**
  * SosModal Component
@@ -27,6 +30,7 @@ import { useToast } from '../context/ToastContext';
  */
 function SosModal({ isOpen, onClose, user: propUser }) {
   const toast = useToast();
+  const { coordinates, shareableLinks, getImmediateLocation } = useGeolocation();
   let contextUser = null;
   try {
     const auth = useAuth();
@@ -107,6 +111,9 @@ function SosModal({ isOpen, onClose, user: propUser }) {
   // Trigger siren and auto-dispatch personal contacts notification upon opening
   useEffect(() => {
     if (isOpen) {
+      // Auto-trigger fresh GPS satellite fix for emergency beacon
+      getImmediateLocation();
+
       toast.error('Emergency SOS Beacon broadcasted. Alarm siren activated!', {
         title: 'SOS Distress Signal Live',
         duration: 5000
@@ -220,6 +227,28 @@ function SosModal({ isOpen, onClose, user: propUser }) {
             </button>
           </div>
 
+          {/* Live GPS Coordinates Attachment Bar */}
+          <div className="sos-gps-beacon-bar">
+            <div className="sos-gps-info">
+              <MapPin size={16} className="text-primary animate-pulse" />
+              <span>
+                <strong>GPS Beacon:</strong> {coordinates.latitude ? `${coordinates.latitude.toFixed(5)}, ${coordinates.longitude.toFixed(5)} (±${Math.round(coordinates.accuracy || 15)}m)` : 'Acquiring satellite fix...'}
+              </span>
+            </div>
+            {shareableLinks.googleMaps && (
+              <a 
+                href={shareableLinks.googleMaps} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="sos-gps-link-btn"
+                title="View in Google Maps"
+              >
+                <span>View Map</span>
+                <ExternalLink size={12} />
+              </a>
+            )}
+          </div>
+
           {/* Siren Control Bar */}
           <div className="sos-siren-bar">
             <div className="siren-status-label">
@@ -269,7 +298,8 @@ function SosModal({ isOpen, onClose, user: propUser }) {
             <div className="sos-contacts-list">
               {emergencyContacts.map((c) => {
                 const cleanPhone = c.phone.replace(/[^0-9]/g, '');
-                const distressMsg = `🚨 EMERGENCY DISTRESS ALERT from ${user?.name || 'WatchOver Member'}! I need immediate safety assistance. Please contact me immediately.`;
+                const locationSnippet = shareableLinks.googleMaps ? `\n📍 Live GPS Location: ${shareableLinks.googleMaps}` : '';
+                const distressMsg = `🚨 EMERGENCY DISTRESS ALERT from ${user?.name || 'WatchOver Member'}! I need immediate safety assistance. Please contact me immediately.${locationSnippet}`;
                 const isNotified = notifiedMap[c.id];
 
                 return (
