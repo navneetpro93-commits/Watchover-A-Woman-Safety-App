@@ -144,7 +144,7 @@ function App() {
             path="/home" 
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <Home />
+                <Home user={user} />
               </ProtectedRoute>
             } 
           />

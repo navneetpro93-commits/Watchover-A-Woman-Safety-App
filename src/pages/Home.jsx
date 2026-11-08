@@ -2,15 +2,19 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Navigation, Users, Smartphone, ShieldAlert, ArrowRight } from 'lucide-react';
 import ServiceCard from '../components/ServiceCard';
+import LiveTracker from '../components/LiveTracker';
 import { useLanguage } from '../utils/useLanguage';
 import watchoverLogo from '../assets/watchover_logo_edited.jpg';
 
 /**
  * Home Page Component
  * Multilingual supported via useLanguage hook
+ * @param {Object} props
+ * @param {Object} props.user - Current authenticated user
  */
-function Home() {
+function Home({ user }) {
   const { t } = useLanguage();
+  const emergencyContacts = user?.emergencyContacts || [];
 
   // Array of 4 Safety Categories with reactive translations
   const safetyCategories = [
@@ -72,7 +76,11 @@ function Home() {
       {/* Safety Categories Section */}
       <section className="page-section">
         <div className="container">
-          <div className="text-center">
+          
+          {/* Live GPS Tracking Radar Component (Step 2) */}
+          <LiveTracker emergencyContacts={emergencyContacts} />
+
+          <div className="text-center" style={{ marginTop: '20px' }}>
             <h2 className="section-title">{t.home.categoriesTitle}</h2>
             <p className="section-subtitle">
               {t.home.categoriesSubtitle}
