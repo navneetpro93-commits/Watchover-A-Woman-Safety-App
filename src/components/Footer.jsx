@@ -7,7 +7,7 @@ function Footer() {
   const { t } = useLanguage();
 
   const teamMembers = [
-    { name: 'Divyanshi' },
+    { name: 'Divyanshi', isLeader: true },
     { name: 'Rachit Goyal' },
     { name: 'Navneet' },
     { name: 'Hriday Sehgal' }
@@ -63,8 +63,18 @@ function Footer() {
 
           <div className="footer-team-grid">
             {teamMembers.map((member, index) => (
-              <span key={index} className="footer-team-badge">
-                {member.name}
+              <span
+                key={index}
+                className={`footer-team-badge ${member.isLeader ? 'leader-badge' : ''}`}
+                title={member.isLeader ? 'Team Leader: Divyanshi' : undefined}
+              >
+                {member.isLeader && (
+                  <Crown size={15} className="leader-crown-icon" />
+                )}
+                <span>{member.name}</span>
+                {member.isLeader && (
+                  <span className="leader-pill">Leader</span>
+                )}
               </span>
             ))}
           </div>
