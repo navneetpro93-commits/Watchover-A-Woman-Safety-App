@@ -15,6 +15,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 /**
  * SosModal Component
@@ -25,6 +26,7 @@ import { useAuth } from '../context/AuthContext';
  * - Consuming global AuthContext for user emergency contacts
  */
 function SosModal({ isOpen, onClose, user: propUser }) {
+  const toast = useToast();
   let contextUser = null;
   try {
     const auth = useAuth();
@@ -105,6 +107,11 @@ function SosModal({ isOpen, onClose, user: propUser }) {
   // Trigger siren and auto-dispatch personal contacts notification upon opening
   useEffect(() => {
     if (isOpen) {
+      toast.error('Emergency SOS Beacon broadcasted. Alarm siren activated!', {
+        title: 'SOS Distress Signal Live',
+        duration: 5000
+      });
+
       if (isSirenActive) {
         startSiren();
       }
@@ -317,7 +324,10 @@ function SosModal({ isOpen, onClose, user: propUser }) {
           <div className="sos-footer-actions">
             <button
               type="button"
-              onClick={onClose}
+              onClick={() => {
+                onClose();
+                toast.success('Distress alarm deactivated. Status marked as safe.', { title: 'SOS Dismissed' });
+              }}
               className="sos-safe-dismiss-btn"
             >
               <ShieldCheck size={18} className="text-emerald" />

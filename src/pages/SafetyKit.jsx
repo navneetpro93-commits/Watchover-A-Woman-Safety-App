@@ -46,6 +46,7 @@ import {
   restoreSavedKit,
   deleteSavedKit
 } from '../store/safetyKitSlice';
+import { useToast } from '../context/ToastContext';
 
 /**
  * UI Translations Dictionary
@@ -225,6 +226,7 @@ const UI_TRANSLATIONS = {
  * 4. Immutable cart state modifications
  */
 function SafetyKit() {
+  const toast = useToast();
   const dispatch = useDispatch();
   const catalog = useSelector(selectCatalog);
   const kitItems = useSelector(selectKitItems);
@@ -288,25 +290,20 @@ function SafetyKit() {
     const localized = getLocalizedItem(item);
     dispatch(addToKit(item));
     setIsKitExpanded(true);
-    setNotification(t.alertAdded(localized.name));
-    setTimeout(() => {
-      setNotification('');
-    }, 2500);
+    toast.success(t.alertAdded(localized.name), { title: 'Item Added to Kit' });
   };
 
   // Save current kit to history
   const handleSaveCurrentKit = () => {
     if (kitItems.length === 0) {
-      setNotification(t.alertEmptySave);
-      setTimeout(() => setNotification(''), 2500);
+      toast.warning(t.alertEmptySave, { title: 'Kit is Empty' });
       return;
     }
     const defaultName = prompt(t.promptName, `Emergency Kit #${savedKitsHistory.length + 1}`);
     if (defaultName !== null) {
       const trimmed = defaultName.trim() || `Emergency Kit #${savedKitsHistory.length + 1}`;
       dispatch(saveCurrentKit({ name: trimmed }));
-      setNotification(t.alertSaved(trimmed));
-      setTimeout(() => setNotification(''), 2500);
+      toast.success(t.alertSaved(trimmed), { title: 'Kit Saved' });
     }
   };
 
@@ -315,15 +312,13 @@ function SafetyKit() {
     dispatch(restoreSavedKit(entry.id));
     setIsHistoryModalOpen(false);
     setIsKitExpanded(true);
-    setNotification(t.alertLoaded(entry.name));
-    setTimeout(() => setNotification(''), 2500);
+    toast.info(t.alertLoaded(entry.name), { title: 'Kit Restored' });
   };
 
   // Delete saved kit from history
   const handleDeleteSavedKit = (id, name) => {
     dispatch(deleteSavedKit(id));
-    setNotification(t.alertRemoved(name));
-    setTimeout(() => setNotification(''), 2500);
+    toast.error(t.alertRemoved(name), { title: 'Configuration Removed' });
   };
 
   return (

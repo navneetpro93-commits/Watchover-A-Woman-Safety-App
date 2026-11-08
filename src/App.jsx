@@ -17,6 +17,7 @@ import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import NotFound from './pages/NotFound';
 import SosModal from './components/SosModal';
+import { useToast } from './context/ToastContext';
 
 /**
  * Main Application Component
@@ -26,6 +27,8 @@ import SosModal from './components/SosModal';
  * 3. Protected Routes for Home, Services, SafetyTips, Profile, and Settings
  */
 function App() {
+  const toast = useToast();
+
   // Store logged-in user details in localStorage
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('watchover_user');
@@ -74,18 +77,21 @@ function App() {
     };
     setUser(defaultUser);
     localStorage.setItem('watchover_user', JSON.stringify(defaultUser));
+    toast.success(`Welcome back, ${defaultUser.name}! Session authenticated.`, { title: 'Login Successful' });
   };
 
   // Handle profile / settings update
   const handleUpdateUser = (updatedUserData) => {
     setUser(updatedUserData);
     localStorage.setItem('watchover_user', JSON.stringify(updatedUserData));
+    toast.info('Personal safety profile and guardian details saved.', { title: 'Settings Updated' });
   };
 
   // Handle user logout
   const handleLogout = () => {
     setUser(null);
     localStorage.removeItem('watchover_user');
+    toast.warning('You have signed out of your WatchOver account.', { title: 'Logged Out' });
   };
 
   return (
