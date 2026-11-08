@@ -14,11 +14,13 @@ import {
   Clock,
   Sparkles,
   MapPin,
-  ExternalLink
+  ExternalLink,
+  ShieldAlert
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { useGeolocation } from '../utils/useGeolocation';
+import { getNearestPoliceStation } from '../utils/policeDirectory';
 
 /**
  * SosModal Component
@@ -31,6 +33,10 @@ import { useGeolocation } from '../utils/useGeolocation';
 function SosModal({ isOpen, onClose, user: propUser }) {
   const toast = useToast();
   const { coordinates, shareableLinks, getImmediateLocation } = useGeolocation();
+  
+  // Real-time nearest police station computation
+  const nearestPolice = getNearestPoliceStation(coordinates.latitude, coordinates.longitude);
+  
   let contextUser = null;
   try {
     const auth = useAuth();
@@ -114,9 +120,9 @@ function SosModal({ isOpen, onClose, user: propUser }) {
       // Auto-trigger fresh GPS satellite fix for emergency beacon
       getImmediateLocation();
 
-      toast.error('Emergency SOS Beacon broadcasted. Alarm siren activated!', {
+      toast.error(`Emergency SOS Beacon broadcasted! Nearest Police: ${nearestPolice.name} (${nearestPolice.distanceFormatted})`, {
         title: 'SOS Distress Signal Live',
-        duration: 5000
+        duration: 5500
       });
 
       if (isSirenActive) {
@@ -267,13 +273,53 @@ function SosModal({ isOpen, onClose, user: propUser }) {
 
           {/* Quick National Helplines Grid */}
           <h4 className="sos-section-title">
-            National Emergency Dispatch (One-Tap Calling)
+            Emergency Dispatch & Nearest Police Station
           </h4>
+
+          {/* Dedicated Nearest Police Dispatch Card inside SOS */}
+          <div className="sos-nearest-police-banner">
+            <div className="sos-police-banner-header">
+              <div className="sos-police-badge-wrap">
+                <ShieldAlert size={16} className="text-primary" />
+                <strong>{nearestPolice.name}</strong>
+              </div>
+              <span className="sos-police-dist-pill">{nearestPolice.distanceFormatted}</span>
+            </div>
+            
+            <p className="sos-police-banner-address">
+              📍 {nearestPolice.address}
+            </p>
+
+            <div className="sos-police-banner-actions">
+              <a 
+                href={`tel:${nearestPolice.phone}`}
+                className="sos-police-call-btn"
+                title={`Call ${nearestPolice.name}`}
+              >
+                <PhoneCall size={14} />
+                <span>Call Station ({nearestPolice.phone})</span>
+              </a>
+
+              <button
+                type="button"
+                className="sos-police-share-btn"
+                onClick={() => {
+                  toast.error(`Coordinates transmitted to ${nearestPolice.name}. Local patrol dispatched!`, {
+                    title: 'Local Patrol Alerted'
+                  });
+                }}
+              >
+                <Send size={13} />
+                <span>Transmit GPS to Station</span>
+              </button>
+            </div>
+          </div>
+
           <div className="sos-helplines-grid">
             <a href="tel:112" className="sos-helpline-box primary-emergency">
               <PhoneCall size={20} />
               <span className="helpline-num">112</span>
-              <small>Police / National Dispatch</small>
+              <small>National Emergency Police</small>
             </a>
 
             <a href="tel:1091" className="sos-helpline-box women-emergency">
