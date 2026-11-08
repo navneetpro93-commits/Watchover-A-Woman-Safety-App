@@ -8,100 +8,135 @@ import {
   ArrowRight, 
   ShieldCheck, 
   HeartHandshake, 
-  Sparkles,
-  Lock,
-  Compass,
-  Zap,
-  ExternalLink,
-  GraduationCap,
-  Layers,
-  CheckCircle2,
-  FileText,
-  Volume2,
-  Cpu
+  Sparkles, 
+  Lock, 
+  Compass, 
+  Zap, 
+  ExternalLink, 
+  GraduationCap, 
+  Layers, 
+  CheckCircle2, 
+  FileText, 
+  Volume2, 
+  Cpu,
+  Navigation,
+  Activity,
+  BellRing,
+  Globe2,
+  ShieldAlert
 } from 'lucide-react';
 import watchoverLogo from '../assets/watchover_logo_edited.jpg';
 
 /**
  * About Page Component
  * Publicly accessible page showcasing WatchOver's mission, impact stats,
- * core safety services preview, tech stack, and full CE1 & CE2 academic syllabus coverage.
+ * core safety services preview, complete tech stack, and full CE1, CE2 & Final Evaluation (Lectures 1-90) syllabus mapping.
  * 
  * @param {Object} props
  * @param {boolean} props.isAuthenticated - Current user login status
  */
 function About({ isAuthenticated }) {
-  // Tech stack list with official documentation URLs covering CE1 and CE2 tools
+  // Complete tech stack list covering full course curriculum (Lectures 1-90)
   const techStack = [
-    { name: "HTML5", desc: "Semantic & Accessible Elements", url: "https://developer.mozilla.org/en-US/docs/Web/HTML" },
-    { name: "CSS3", desc: "Custom System & Keyframes", url: "https://developer.mozilla.org/en-US/docs/Web/CSS" },
-    { name: "JavaScript", desc: "ES6+ Logic & Web APIs", url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript" },
-    { name: "ReactJS 18", desc: "Component Architecture", url: "https://react.dev" },
-    { name: "React Router", desc: "SPA Multi-Page Routing", url: "https://reactrouter.com" },
-    { name: "Redux & Context", desc: "Global State Architecture", url: "https://redux-toolkit.js.org" },
-    { name: "Web Audio API", desc: "Oscillator Distress Siren", url: "https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API" },
-    { name: "Vite", desc: "Next-Gen Frontend Bundler", url: "https://vitejs.dev" }
+    { name: "HTML5", desc: "Semantic & Accessible Elements (L1-12)", url: "https://developer.mozilla.org/en-US/docs/Web/HTML" },
+    { name: "CSS3", desc: "Design System, Flex/Grid & Keyframes (L1-24)", url: "https://developer.mozilla.org/en-US/docs/Web/CSS" },
+    { name: "JavaScript ES6+", desc: "Async/Await, Promises & Modules (L25-36)", url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript" },
+    { name: "ReactJS 18", desc: "Component Architecture & Hooks (L49-72)", url: "https://react.dev" },
+    { name: "React Router v6", desc: "SPA Multi-Page & Dynamic Routing (L73-78)", url: "https://reactrouter.com" },
+    { name: "Redux Toolkit", desc: "Predictable Global State Architecture (L79-84)", url: "https://redux-toolkit.js.org" },
+    { name: "Context API", desc: "Global Theme, Auth & Toast Providers (L79-84)", url: "https://react.dev/reference/react/useContext" },
+    { name: "HTML5 Geolocation", desc: "Hardware Satellite GPS & WatchPosition (L25-36)", url: "https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API" },
+    { name: "Web Audio API", desc: "Oscillator Emergency Distress Siren (L25-36)", url: "https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API" },
+    { name: "Async REST Service", desc: "Mock REST CRUD API & LocalStorage Engine (L85-90)", url: "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API" },
+    { name: "Vite", desc: "Next-Gen Frontend Bundler & HMR", url: "https://vitejs.dev" },
+    { name: "i18n Multilingual", desc: "English, Hindi, Punjabi & Kannada Engine", url: "https://react.dev" }
   ];
 
   // Quick stats highlights
   const stats = [
     { number: "8+", label: "Actionable Safety Tips", icon: <Sparkles size={20} /> },
     { number: "4", label: "Core Safety Services", icon: <Compass size={20} /> },
-    { number: "100%", label: "Free & Open Access", icon: <HeartHandshake size={20} /> },
-    { number: "24/7", label: "Awareness & SOS System", icon: <ShieldCheck size={20} /> }
+    { number: "4", label: "Regional Languages (EN, HI, PA, KN)", icon: <Globe2 size={20} /> },
+    { number: "24/7", label: "Live GPS & Emergency SOS", icon: <ShieldCheck size={20} /> }
   ];
 
-  // Continuous Evaluation (CE1 & CE2) Syllabus Mapping
+  // Comprehensive Syllabus Mapping (Lectures 1 to 90) across CE1, CE2, and Final Evaluation
   const syllabusEvaluations = [
     {
       evalId: "CE1",
-      badge: "Continuous Evaluation 1",
-      title: "Front-End Fundamentals & SPA Architecture",
+      badge: "Lectures 1 – 48 • CE1 Scope",
+      title: "Front-End Fundamentals & Component Hierarchy",
       icon: <Layers size={24} />,
       accentClass: "ce1-accent",
-      description: "Covers core web architecture, modular component layout, responsive styling, and client-side multi-page routing.",
+      description: "Covers core web architecture, modular component layout, responsive design systems, and client-side multi-page routing.",
       modules: [
         {
-          heading: "HTML5 & Modern CSS3 System",
+          heading: "HTML5 & Modern CSS3 System (L1-24)",
           detail: "Semantic layouts, responsive flexbox & CSS grid, CSS custom properties (--primary, --card-bg), and custom keyframe animations."
         },
         {
-          heading: "JavaScript (ES6+) & DOM Manipulation",
+          heading: "JavaScript (ES6+) & DOM Manipulation (L25-36)",
           detail: "Functional programming patterns, array transformations (map, filter), modular imports, and localStorage persistence."
         },
         {
-          heading: "React Component Hierarchy",
-          detail: "Reusable ServiceCard and TipCard components, props passing, unidirectional data flow, and local UI state with useState."
+          heading: "React Component Hierarchy & State (L37-60)",
+          detail: "Reusable ServiceCard and TipCard components, props passing, unidirectional data flow, and local UI state with useState & useEffect."
         },
         {
-          heading: "React Router SPA Navigation",
-          detail: "Multi-page client-side routing with BrowserRouter, NavLink active tracking, URL route parameters, and ProtectedRoute guards."
+          heading: "React Router SPA Navigation (L73-78)",
+          detail: "Multi-page client-side routing with BrowserRouter, NavLink active tracking, URL dynamic route parameters (/services/:serviceId), and ProtectedRoute guards."
         }
       ]
     },
     {
       evalId: "CE2",
-      badge: "Continuous Evaluation 2",
+      badge: "Lectures 49 – 84 • CE2 Scope",
       title: "State Architecture, Redux / Context & Form Handling",
       icon: <Cpu size={24} />,
       accentClass: "ce2-accent",
-      description: "Covers enterprise state architecture, global contexts & Redux, rigorous form validation strategies, and browser audio APIs.",
+      description: "Covers enterprise state architecture, global contexts & Redux Toolkit, rigorous form validation strategies, and browser audio APIs.",
       modules: [
         {
-          heading: "Global State with Redux Toolkit & Context API",
-          detail: "Redux Toolkit store with safetyKitSlice (cart quantity, price computations), and Context API for authentication lifecycle and theme."
+          heading: "Global State with Redux Toolkit & Context API (L79-84)",
+          detail: "Redux Toolkit store with safetyKitSlice (cart quantity, price computations), and Context API for authentication lifecycle and theme switching."
         },
         {
-          heading: "Form Handling & Validation Strategies",
+          heading: "Controlled Form Handling & Validation Strategies (L37-48)",
           detail: "Reusable FormField components, real-time regex validation (email, password, phone), touched state tracking, and defensive error messaging."
         },
         {
-          heading: "Browser Audio Synthesis (Web Audio API)",
+          heading: "Browser Audio Synthesis - Web Audio API (L25-36)",
           detail: "Zero-dependency dual-frequency audio oscillator simulating emergency SOS distress siren directly through native browser APIs."
         },
         {
-          heading: "Emergency Contact & Dispatch Simulation",
-          detail: "Automated emergency dispatch messaging, WhatsApp one-tap broadcast formatting, and national women helpline directory."
+          heading: "Emergency Contact & Dispatch Simulation (L61-72)",
+          detail: "Automated emergency dispatch messaging, WhatsApp one-tap broadcast formatting, and national women helpline directory (112, 1091, 181)."
+        }
+      ]
+    },
+    {
+      evalId: "CE3",
+      badge: "Lectures 85 – 90 • Advanced & Final Scope",
+      title: "Async REST APIs, CRUD Workflows, Live GPS & UI Patterns",
+      icon: <Activity size={24} />,
+      accentClass: "ce3-accent",
+      description: "Covers full asynchronous REST API mock architecture, community incident CRUD workflows, real-time GPS hardware tracking, and advanced UI patterns.",
+      modules: [
+        {
+          heading: "Async REST API & Full CRUD Workflows (L85-90)",
+          detail: "incidentService mock REST API layer with simulated network latency (Promise delays), localStorage persistence (watchover_incidents), and full Create, Read, Verify, and Delete workflows."
+        },
+        {
+          heading: "Live Satellite GPS Tracking & Geodesic Algorithms (L61-72, L85-90)",
+          detail: "Custom useGeolocation hook using navigator.geolocation.watchPosition, street-level OpenStreetMap embed, and Haversine formula calculating distances to nearest Police Stations."
+        },
+        {
+          heading: "Advanced UI Patterns - Toast Notifications & Modals (L85-90)",
+          detail: "Global ToastContext with auto-dismiss timers, animated countdown progress bars, interactive tabs UI filter pills, and controlled ReportIncidentModal."
+        },
+        {
+          heading: "Multilingual Internationalization Engine (L61-72)",
+          detail: "useLanguage custom hook supporting 4 regional languages (English, Hindi, Punjabi, and Kannada) with real-time UI synchronization."
         }
       ]
     }
@@ -131,8 +166,8 @@ function About({ isAuthenticated }) {
           </h1>
 
           <p className="about-hero-desc">
-            WatchOver is a modern digital platform designed to provide practical safety guidelines, 
-            commute awareness, emergency SOS alert simulation, and personal contact dispatch.
+            WatchOver is a comprehensive digital platform designed to provide practical safety guidelines, 
+            commute awareness, emergency SOS alert simulation, live GPS tracking, and community incident reporting.
           </p>
 
           {/* Call to Action buttons */}
@@ -186,7 +221,7 @@ function About({ isAuthenticated }) {
             </div>
             <p>
               WatchOver is an initiative focused on spreading safety awareness among women, students, 
-              and daily commuters. Developed as a progressive college project spanning CE1 and CE2, 
+              and daily commuters. Developed as a progressive college project spanning Lectures 1 through 90, 
               it combines clean design with practical guidelines to foster confidence in daily travel, 
               public spaces, and emergency readiness.
             </p>
@@ -205,13 +240,13 @@ function About({ isAuthenticated }) {
             </div>
             <p>
               The primary goal is to make essential safety tips easily accessible while serving as an 
-              in-depth academic demonstration of modern ReactJS architectures: from multi-page routing 
-              in CE1 to Redux / Context API state architecture and robust form validation in CE2.
+              in-depth academic demonstration of modern ReactJS architectures: from HTML5/CSS3 and multi-page routing 
+              in CE1, Redux Toolkit and Context API in CE2, to Async REST CRUD workflows, Web APIs, and Live GPS in the final evaluation.
             </p>
           </div>
         </div>
 
-        {/* 4. Academic Syllabus & Continuous Evaluation Mapping (CE1 & CE2) */}
+        {/* 4. Complete Academic Syllabus Mapping (Lectures 1 to 90) */}
         <div className="about-section-box syllabus-section-box">
           <div className="section-box-header">
             <div className="feature-icon bg-purple">
@@ -219,8 +254,8 @@ function About({ isAuthenticated }) {
             </div>
             <div>
               <span className="card-tag">Curriculum Alignment</span>
-              <h3>Academic Syllabus Implementation (CE1 & CE2)</h3>
-              <p>Every feature in WatchOver is mapped directly to our college coursework competencies:</p>
+              <h3>Academic Syllabus Implementation (Lectures 1 – 90)</h3>
+              <p>Every feature in WatchOver is mapped directly to our coursework competencies across all evaluation tiers:</p>
             </div>
           </div>
 
@@ -253,36 +288,36 @@ function About({ isAuthenticated }) {
           </div>
         </div>
 
-        {/* 5. Why Join WatchOver Section */}
+        {/* 5. Core Platform Capabilities */}
         <div className="why-section">
           <div className="text-center">
             <span className="hero-tag">Core Capabilities</span>
             <h2 className="section-title">Why Use WatchOver?</h2>
             <p className="section-subtitle">
-              Designed with simplicity and practicality in mind to keep safety tips and emergency tools at your fingertips.
+              Designed with simplicity and practicality in mind to keep safety tips, live telemetry, and emergency tools at your fingertips.
             </p>
           </div>
 
           <div className="why-grid">
             <div className="why-card">
-              <div className="why-icon"><Compass size={24} /></div>
-              <h4>Commute Awareness</h4>
-              <p>Practical tips for staying alert while traveling late at night or using public transit.</p>
+              <div className="why-icon"><Navigation size={24} /></div>
+              <h4>Live GPS Radar</h4>
+              <p>Continuous satellite tracking with OpenStreetMap view, telemetry coordinates, and guardian WhatsApp sharing.</p>
             </div>
             <div className="why-card">
-              <div className="why-icon"><Lock size={24} /></div>
-              <h4>Digital Privacy</h4>
-              <p>Guidelines to protect your location data, social media footprint, and online presence.</p>
+              <div className="why-icon"><ShieldAlert size={24} /></div>
+              <h4>Nearest Police Dispatch</h4>
+              <p>Haversine geodesic formula dynamically computing distance to nearest police station with 1-tap direct calling.</p>
+            </div>
+            <div className="why-card">
+              <div className="why-icon"><BellRing size={24} /></div>
+              <h4>Incident Vigilance Feed</h4>
+              <p>Crowdsourced community hazard reporting for poor street lighting, harassment hotspots, and secluded paths.</p>
             </div>
             <div className="why-card">
               <div className="why-icon"><Volume2 size={24} /></div>
-              <h4>SOS Siren Simulation</h4>
-              <p>High-pitch dual tone browser audio alarm for disorienting attackers and signaling distress.</p>
-            </div>
-            <div className="why-card">
-              <div className="why-icon"><Sparkles size={24} /></div>
-              <h4>Emergency SafetyKit</h4>
-              <p>Personal emergency tool bag powered by Redux Toolkit state with item checkout simulation.</p>
+              <h4>Emergency SOS Siren</h4>
+              <p>High-pitch dual tone browser audio alarm synthesized using Web Audio API for signaling immediate distress.</p>
             </div>
           </div>
         </div>
@@ -294,8 +329,8 @@ function About({ isAuthenticated }) {
               <Code size={24} />
             </div>
             <div>
-              <h3>Technologies Used (CE1 & CE2 Stack)</h3>
-              <p>Built using clean, modern front-end web standards with zero bloated external UI dependencies:</p>
+              <h3>Technologies Used (Complete Course Stack)</h3>
+              <p>Built using clean, modern front-end web standards fulfilling the entire 90-lecture syllabus:</p>
             </div>
           </div>
 
@@ -326,8 +361,8 @@ function About({ isAuthenticated }) {
           </div>
           <h2>Join the WatchOver Community Today</h2>
           <p>
-            Log in or create a free account to explore full safety services, search guidelines, 
-            and trigger emergency alerts when needed.
+            Log in or create a free account to explore full safety services, view live GPS tracking, 
+            report community incidents, and trigger emergency alerts when needed.
           </p>
 
           {!isAuthenticated ? (
