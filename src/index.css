@@ -6123,3 +6123,232 @@ input:checked+.toggle-slider:before {
   font-weight: 700;
   cursor: pointer;
 }
+
+
+/* Step 3: Report Incident Controlled Modal Dialog Styling */
+.report-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+  animation: modalFadeIn 0.25s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.report-modal-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+  animation: modalScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalScaleUp {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.report-modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.report-header-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.report-modal-icon-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background-color: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.report-header-title-group h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--secondary);
+  margin: 0 0 2px 0;
+}
+
+.report-header-title-group p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.report-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.report-close-btn:hover {
+  background-color: var(--bg-main);
+  color: var(--secondary);
+}
+
+.report-form-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.report-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.report-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.report-label {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--secondary);
+}
+
+.req-star {
+  color: #ef4444;
+}
+
+.report-input, .report-select, .report-textarea {
+  width: 100%;
+  background-color: var(--bg-main);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.report-input:focus, .report-select:focus, .report-textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.15);
+  background-color: var(--card-bg);
+}
+
+.input-error {
+  border-color: #ef4444 !important;
+  background-color: rgba(239, 68, 68, 0.04) !important;
+}
+
+.field-error-msg {
+  font-size: 0.78rem;
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.input-with-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-inner-icon {
+  position: absolute;
+  left: 12px;
+  color: var(--text-muted);
+}
+
+.report-input.with-icon {
+  padding-left: 36px;
+}
+
+/* GPS Sync Bar inside Modal */
+.report-gps-sync-card {
+  background-color: var(--bg-main);
+  border: 1px dashed var(--border-color);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.gps-sync-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gps-sync-left strong {
+  display: block;
+  font-size: 0.84rem;
+  color: var(--secondary);
+}
+
+.gps-sync-left small {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-family: monospace;
+}
+
+.gps-sync-btn {
+  font-size: 0.78rem;
+  padding: 6px 12px;
+  white-space: nowrap;
+}
+
+.report-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+}
+
+.report-submit-btn {
+  box-shadow: 0 4px 12px rgba(244, 63, 94, 0.25);
+}
+
+@media (max-width: 640px) {
+  .report-form-row {
+    grid-template-columns: 1fr;
+  }
+  .report-gps-sync-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .gps-sync-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
