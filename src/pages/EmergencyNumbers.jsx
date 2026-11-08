@@ -260,19 +260,21 @@ function EmergencyNumbers() {
                 <ShieldAlert size={16} /> {
                   language === 'hi' ? '24/7 सत्यापित आपातकालीन निर्देशिका' :
                   language === 'pa' ? '24/7 ਪ੍ਰਮਾਣਿਤ ਐਮਰਜੈਂਸੀ ਡਾਇਰੈਕਟਰੀ' :
+                  language === 'kn' ? '24/7 ಪರಿಶೀಲಿಸಿದ ತುರ್ತು ಡೈರೆಕ್ಟರಿ' :
                   '24/7 Verified Emergency Directory'
                 }
               </div>
               <h1 className="emergency-hero-title">
-                {language === 'hi' ? 'आपातकालीन एवं सुरक्षा ' : language === 'pa' ? 'ਐਮਰਜੈਂਸੀ ਅਤੇ ਸੁਰੱਖਿਆ ' : 'Emergency & Safety '}
+                {language === 'hi' ? 'आपातकालीन एवं सुरक्षा ' : language === 'pa' ? 'ਐਮਰਜੈਂਸੀ ਅਤੇ ਸੁਰੱਖਿਆ ' : language === 'kn' ? 'ತುರ್ತು ಮತ್ತು ಸುರಕ್ಷತಾ ' : 'Emergency & Safety '}
                 <span className="highlight-text">
-                  {language === 'hi' ? 'हेल्पलाइन' : language === 'pa' ? 'ਹੈਲਪਲਾਈਨ' : 'Helplines'}
+                  {language === 'hi' ? 'हेल्पलाइन' : language === 'pa' ? 'ਹੈਲਪਲਾਈਨ' : language === 'kn' ? 'ಸಹಾಯವಾಣಿಗಳು' : 'Helplines'}
                 </span>
               </h1>
               <p className="emergency-hero-subtitle">
                 {
                   language === 'hi' ? 'महिला सुरक्षा, पुलिस त्वरित प्रतिक्रिया, पारगमन सुरक्षा और सत्यापित संकट परामर्श के लिए त्वरित 1-टैप कॉलिंग।' :
                   language === 'pa' ? 'ਮਹਿਲਾ ਸੁਰੱਖਿਆ, ਪੁਲਿਸ ਤੁਰੰਤ ਕਾਰਵਾਈ ਅਤੇ ਸੰਕਟ ਸਹਾਇਤਾ ਲਈ ਤੁਰੰਤ ਕਾਲਿੰਗ ਸੁਵਿਧਾ।' :
+                  language === 'kn' ? 'ಮಹಿಳಾ ಸುರಕ್ಷತೆ, ಪೊಲೀಸ್ ತ್ವರಿਤ ಪ್ರತಿಕ್ರಿಯೆ ಮತ್ತು ಬಿಕ್ಕಟ್ಟಿನ ನೆರವಿಗಾಗಿ ತ್ವರಿತ 1-ಟ್ಯಾಪ್ ಕರೆ ಸೌಲಭ್ಯ.' :
                   'Instant one-tap direct calling for women safety, police rapid dispatch, transit protection, and verified crisis counseling across India.'
                 }
               </p>

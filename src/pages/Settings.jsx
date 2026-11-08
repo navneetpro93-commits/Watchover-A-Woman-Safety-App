@@ -516,6 +516,31 @@ function Settings({ user, onUpdateUser, darkMode, onToggleDarkMode }) {
                       <h4>{t.settings.langPaTitle}</h4>
                       <p>{t.settings.langPaDesc}</p>
                     </label>
+
+                    {/* Kannada */}
+                    <label 
+                      className={`theme-radio-card ${language === 'kn' ? 'selected' : ''}`}
+                      onClick={() => setLanguage('kn')}
+                    >
+                      <div className="radio-card-top">
+                        <input
+                          type="radio"
+                          name="languageChoice"
+                          value="kn"
+                          checked={language === 'kn'}
+                          onChange={() => setLanguage('kn')}
+                          className="theme-radio-input"
+                        />
+                        <div className="radio-icon-box light-box" style={{ fontSize: '1.4rem' }}>
+                          🌺
+                        </div>
+                        {language === 'kn' && (
+                          <span className="selected-check-badge"><Check size={14} /> {t.settings.activeBadge}</span>
+                        )}
+                      </div>
+                      <h4>{t.settings.langKnTitle || 'ಕನ್ನಡ (Kannada)'}</h4>
+                      <p>{t.settings.langKnDesc || 'ಎಲ್ಲಾ ಪುಟಗಳು ಮತ್ತು ಸಾಧನಗಳಿಗಾಗಿ ಕನ್ನಡ ಇಂಟರ್ಫೇಸ್.'}</p>
+                    </label>
                   </div>
                 </div>
               )}
