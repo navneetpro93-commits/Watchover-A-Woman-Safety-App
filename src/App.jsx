@@ -12,6 +12,7 @@ import Services from './pages/Services';
 import ServiceDetail from './pages/ServiceDetail';
 import SafetyTips from './pages/SafetyTips';
 import SafetyKit from './pages/SafetyKit';
+import Incidents from './pages/Incidents';
 import EmergencyNumbers from './pages/EmergencyNumbers';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
@@ -177,6 +178,14 @@ function App() {
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <SafetyKit />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/incidents" 
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <Incidents user={user} />
               </ProtectedRoute>
             } 
           />

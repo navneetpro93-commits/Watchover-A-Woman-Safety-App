@@ -101,6 +101,16 @@ function Navbar({ isAuthenticated, onLogout, darkMode, onToggleDarkMode, onOpenS
               </li>
               <li>
                 <NavLink 
+                  to="/incidents" 
+                  className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'} 
+                  onClick={closeMenu}
+                  style={{ whiteSpace: 'nowrap' }}
+                >
+                  {t.navbar.incidents || 'Incidents'}
+                </NavLink>
+              </li>
+              <li>
+                <NavLink 
                   to="/helpline" 
                   className={({ isActive }) => isActive ? 'nav-link nav-link-helpline active' : 'nav-link nav-link-helpline'} 
                   onClick={closeMenu}
