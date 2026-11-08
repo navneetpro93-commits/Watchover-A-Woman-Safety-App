@@ -210,6 +210,42 @@ function LiveTracker({ emergencyContacts = [] }) {
         )}
       </div>
 
+      {/* 4.1 Interactive Live Map View (Step 3) */}
+      <div className="tracker-map-container">
+        {coordinates.latitude && coordinates.longitude ? (
+          <div className="tracker-map-wrapper">
+            <iframe
+              title="Live OpenStreetMap GPS View"
+              className="tracker-map-iframe"
+              src={`https://www.openstreetmap.org/export/embed.html?bbox=${coordinates.longitude - 0.008}%2C${coordinates.latitude - 0.005}%2C${coordinates.longitude + 0.008}%2C${coordinates.latitude + 0.005}&layer=mapnik&marker=${coordinates.latitude}%2C${coordinates.longitude}`}
+              loading="lazy"
+            />
+            
+            {/* Live GPS Pin Overlay Card */}
+            <div className="map-live-overlay-card">
+              <div className="map-overlay-pulse">
+                <span className="pulse-ring" />
+                <MapPin size={18} className="map-pin-icon" />
+              </div>
+              <div className="map-overlay-text">
+                <strong>You Are Here</strong>
+                <small>{coordinates.latitude.toFixed(4)}, {coordinates.longitude.toFixed(4)}</small>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="tracker-map-placeholder">
+            <div className="placeholder-radar-icon">
+              <Compass size={38} className={isLoading ? 'animate-spin' : ''} />
+            </div>
+            <h4>Interactive Satellite Map Standby</h4>
+            <p>
+              Click <strong>"Start Live Tracking"</strong> or <strong>"One-Time Fix"</strong> to render your live street-level OpenStreetMap location.
+            </p>
+          </div>
+        )}
+      </div>
+
       {/* 5. Guardian WhatsApp Instant Dispatch Panel */}
       <div className="tracker-dispatch-section">
         <div className="dispatch-header">

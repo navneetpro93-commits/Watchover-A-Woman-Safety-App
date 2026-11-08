@@ -5244,3 +5244,129 @@ input:checked+.toggle-slider:before {
     justify-content: flex-end;
   }
 }
+
+
+/* Step 3: Interactive OpenStreetMap Container & Live Pin Overlay */
+.tracker-map-container {
+  margin-bottom: 24px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-main);
+  box-shadow: var(--shadow-sm);
+}
+
+.tracker-map-wrapper {
+  position: relative;
+  width: 100%;
+  height: 320px;
+}
+
+.tracker-map-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+/* Dark mode adjustment for iframe map */
+[data-theme="dark"] .tracker-map-iframe {
+  filter: invert(0.9) hue-rotate(180deg) brightness(0.95) contrast(0.9);
+}
+
+.map-live-overlay-card {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.15);
+  z-index: 10;
+  backdrop-filter: blur(8px);
+}
+
+.map-overlay-pulse {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-pin-icon {
+  color: var(--primary);
+  z-index: 2;
+}
+
+.pulse-ring {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: rgba(244, 63, 94, 0.35);
+  animation: mapPulseRing 1.8s infinite ease-out;
+}
+
+@keyframes mapPulseRing {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+.map-overlay-text strong {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--secondary);
+}
+
+.map-overlay-text small {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-family: monospace;
+}
+
+/* Map Standby Placeholder */
+.tracker-map-placeholder {
+  padding: 44px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder-radar-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: var(--primary-light);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.tracker-map-placeholder h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--secondary);
+  margin: 0 0 8px 0;
+}
+
+.tracker-map-placeholder p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  max-width: 440px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .tracker-map-wrapper {
+    height: 240px;
+  }
+}
