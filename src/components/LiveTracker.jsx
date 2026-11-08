@@ -13,11 +13,14 @@ import {
   Compass, 
   RefreshCw,
   PhoneCall,
-  MessageSquare
+  MessageSquare,
+  ShieldAlert,
+  Send
 } from 'lucide-react';
 import { useGeolocation } from '../utils/useGeolocation';
 import { useToast } from '../context/ToastContext';
 import { useLanguage } from '../utils/useLanguage';
+import { getNearestPoliceStation } from '../utils/policeDirectory';
 
 /**
  * LiveTracker Component (Step 2 of Live GPS Tracking)
@@ -46,6 +49,10 @@ function LiveTracker({ emergencyContacts = [] }) {
   const toast = useToast();
   const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
+  const [isDispatchedToPolice, setIsDispatchedToPolice] = useState(false);
+
+  // Dynamically resolve nearest police station based on current coordinates
+  const nearestPolice = getNearestPoliceStation(coordinates.latitude, coordinates.longitude);
 
   // Copy GPS Coordinates or Google Maps Link to Clipboard
   const handleCopyLink = () => {
@@ -70,6 +77,25 @@ function LiveTracker({ emergencyContacts = [] }) {
       return "URGENT: I need help! Please contact me immediately.";
     }
     return `URGENT SOS: Here is my real-time GPS location: ${shareableLinks.googleMaps} (Accuracy: within ${Math.round(coordinates.accuracy || 15)}m). Please track me or send assistance!`;
+  };
+
+  // Dispatch emergency coordinates to nearest police control room simulation
+  const handleDispatchToNearestPolice = () => {
+    if (!coordinates.latitude || !coordinates.longitude) {
+      toast.warning('Please acquire GPS satellites before dispatching location to police.', {
+        title: 'Coordinates Required'
+      });
+      return;
+    }
+
+    setIsDispatchedToPolice(true);
+    toast.error(
+      `Live coordinates transmitted to ${nearestPolice.name} (${nearestPolice.distanceFormatted}). Unit alerted!`,
+      {
+        title: 'Police Dispatch Transmitted',
+        duration: 5000
+      }
+    );
   };
 
   return (
@@ -244,6 +270,48 @@ function LiveTracker({ emergencyContacts = [] }) {
             </p>
           </div>
         )}
+      </div>
+
+      {/* 4.2 Nearest Police Station Radar Card (Step 2) */}
+      <div className="nearest-police-card">
+        <div className="police-card-left">
+          <div className="police-icon-badge">
+            <ShieldAlert size={22} />
+          </div>
+          <div className="police-info">
+            <div className="police-badge-row">
+              <span className="police-tag">Nearest Station</span>
+              <span className="police-distance-tag">{nearestPolice.distanceFormatted}</span>
+              {nearestPolice.hasWomenHelpDesk && (
+                <span className="police-women-desk-pill">24x7 Women Help Desk</span>
+              )}
+            </div>
+            <h4 className="police-name">{nearestPolice.name}</h4>
+            <p className="police-address">{nearestPolice.address}</p>
+          </div>
+        </div>
+
+        <div className="police-card-actions">
+          {/* Direct Landline Dial */}
+          <a 
+            href={`tel:${nearestPolice.phone}`}
+            className="police-action-btn call"
+            title={`Call ${nearestPolice.name} directly`}
+          >
+            <PhoneCall size={14} />
+            <span>Call Station ({nearestPolice.phone})</span>
+          </a>
+
+          {/* Location Dispatch Simulation */}
+          <button
+            type="button"
+            className={`police-action-btn dispatch ${isDispatchedToPolice ? 'dispatched' : ''}`}
+            onClick={handleDispatchToNearestPolice}
+          >
+            <Send size={14} />
+            <span>{isDispatchedToPolice ? 'Location Shared with Station' : 'Share GPS with Police'}</span>
+          </button>
+        </div>
       </div>
 
       {/* 5. Guardian WhatsApp Instant Dispatch Panel */}

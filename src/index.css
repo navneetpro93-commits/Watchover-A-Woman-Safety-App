@@ -5417,3 +5417,163 @@ input:checked+.toggle-slider:before {
   background-color: var(--primary);
   color: #ffffff;
 }
+
+
+/* Step 2: Nearest Police Station Radar Card in LiveTracker */
+.nearest-police-card {
+  background: linear-gradient(135deg, rgba(244, 63, 94, 0.05) 0%, rgba(99, 102, 241, 0.04) 100%);
+  border: 1.5px solid rgba(244, 63, 94, 0.3);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+  transition: all 0.25s ease;
+}
+
+.nearest-police-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 4px 18px rgba(244, 63, 94, 0.12);
+}
+
+.police-card-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  flex: 1;
+  min-width: 260px;
+}
+
+.police-icon-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background-color: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.police-badge-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.police-tag {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: var(--primary);
+  color: #ffffff;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.police-distance-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  background-color: var(--card-bg);
+  color: var(--secondary);
+  border: 1px solid var(--border-color);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.police-women-desk-pill {
+  font-size: 0.72rem;
+  font-weight: 700;
+  background-color: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.police-name {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--secondary);
+  margin: 0 0 4px 0;
+  line-height: 1.35;
+}
+
+.police-address {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.police-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.police-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 9px 14px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.police-action-btn.call {
+  background-color: var(--card-bg);
+  color: var(--secondary);
+  border: 1px solid var(--border-color);
+}
+
+.police-action-btn.call:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.police-action-btn.dispatch {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+}
+
+.police-action-btn.dispatch:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.police-action-btn.dispatch.dispatched {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  box-shadow: none;
+}
+
+@media (max-width: 768px) {
+  .nearest-police-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .police-card-actions {
+    width: 100%;
+  }
+  .police-action-btn {
+    flex: 1;
+    justify-content: center;
+  }
+}
