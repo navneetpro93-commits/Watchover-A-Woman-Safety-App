@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Navigation, Users, Smartphone, ShieldAlert, CheckCircle, PhoneCall, ArrowRight } from 'lucide-react';
+import { Navigation, Users, Smartphone, ShieldAlert, CheckCircle, PhoneCall, ArrowRight, Mic } from 'lucide-react';
 import ServiceCard from '../components/ServiceCard';
 import { useLanguage } from '../utils/useLanguage';
 
@@ -79,6 +79,25 @@ function Services() {
           </div>
           <Link to="/fake-call" className="btn-primary fake-call-launch-btn">
             Launch Simulator <ArrowRight size={18} />
+          </Link>
+        </div>
+
+        {/* Quick-Action Tool: Stealth Audio Evidence Recorder */}
+        <div className="fake-call-banner-card audio-vault-banner-card">
+          <div className="fake-call-banner-left">
+            <div className="fake-call-banner-icon audio-vault-banner-icon">
+              <Mic size={28} />
+            </div>
+            <div>
+              <span className="card-tag">Legal & Evidence Recording</span>
+              <h3 className="fake-call-banner-title">1-Tap Stealth Audio Evidence Vault</h3>
+              <p className="fake-call-banner-desc">
+                Discreetly record ambient audio evidence with live waveform visualizer and blacked-out stealth mode. Saved locally with instant playback and .webm export.
+              </p>
+            </div>
+          </div>
+          <Link to="/audio-vault" className="btn-primary fake-call-launch-btn">
+            Open Audio Vault <ArrowRight size={18} />
           </Link>
         </div>
 

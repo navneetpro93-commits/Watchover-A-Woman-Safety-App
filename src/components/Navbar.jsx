@@ -121,6 +121,16 @@ function Navbar({ isAuthenticated, onLogout, darkMode, onToggleDarkMode, onOpenS
               </li>
               <li>
                 <NavLink 
+                  to="/audio-vault" 
+                  className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'} 
+                  onClick={closeMenu}
+                  style={{ whiteSpace: 'nowrap' }}
+                >
+                  {t.navbar.audioVault || 'Audio Vault'}
+                </NavLink>
+              </li>
+              <li>
+                <NavLink 
                   to="/helpline" 
                   className={({ isActive }) => isActive ? 'nav-link nav-link-helpline active' : 'nav-link nav-link-helpline'} 
                   onClick={closeMenu}

@@ -14,6 +14,7 @@ import SafetyTips from './pages/SafetyTips';
 import SafetyKit from './pages/SafetyKit';
 import Incidents from './pages/Incidents';
 import FakeCall from './pages/FakeCall';
+import AudioVault from './pages/AudioVault';
 import EmergencyNumbers from './pages/EmergencyNumbers';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
@@ -195,6 +196,14 @@ function App() {
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <FakeCall />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/audio-vault" 
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <AudioVault />
               </ProtectedRoute>
             } 
           />
