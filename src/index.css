@@ -6729,3 +6729,333 @@ input:checked+.toggle-slider:before {
     border: none;
   }
 }
+
+/* ==========================================================================
+   20. Fake Call Trigger Control Card Styles
+   ========================================================================== */
+
+.fake-call-trigger-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  margin-bottom: 28px;
+  transition: all 0.3s ease;
+}
+
+.trigger-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.trigger-title-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.trigger-icon-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(99, 102, 241, 0.15));
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.trigger-card-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-color);
+  margin: 0 0 4px 0;
+}
+
+.trigger-card-sub {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Active Countdown Pill */
+.active-countdown-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  animation: pulsePill 2s infinite;
+}
+
+@keyframes pulsePill {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.countdown-ring-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+  animation: countdownPulse 1s infinite;
+}
+
+@keyframes countdownPulse {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  100% { transform: scale(1.4); opacity: 1; }
+}
+
+.cancel-countdown-btn {
+  background: rgba(239, 68, 68, 0.2);
+  border: none;
+  color: #ef4444;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: 4px;
+}
+
+.cancel-countdown-btn:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+/* Trigger Sections */
+.trigger-section {
+  margin-bottom: 20px;
+}
+
+.trigger-section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--text-color);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+}
+
+/* Caller Presets Grid */
+.caller-presets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.caller-preset-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.caller-preset-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.caller-preset-card.selected {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(59, 130, 246, 0.05));
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+}
+
+.caller-preset-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.caller-preset-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.caller-preset-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.preset-check {
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.caller-preset-num {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-family: monospace;
+  margin-top: 2px;
+}
+
+/* Timer Presets */
+.timer-presets-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.timer-preset-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.timer-preset-btn:hover:not(:disabled) {
+  border-color: var(--primary);
+  color: var(--text-color);
+}
+
+.timer-preset-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.timer-preset-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Footer & Script Preview */
+.trigger-footer {
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 16px;
+  margin-top: 14px;
+}
+
+.script-preview-box {
+  margin-bottom: 14px;
+}
+
+.script-preview-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+
+.script-preview-text {
+  font-size: 0.85rem;
+  color: var(--text-color);
+  font-style: italic;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.trigger-action-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.trigger-call-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+}
+
+.cancel-scheduled-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  border-radius: 12px;
+}
+
+/* Tip Note */
+.trigger-tip-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-top: 18px;
+  font-size: 0.82rem;
+  color: var(--text-color);
+  line-height: 1.45;
+}
+
+.trigger-tip-note svg {
+  color: #f59e0b;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+@media (max-width: 640px) {
+  .trigger-action-row {
+    justify-content: stretch;
+  }
+  .trigger-call-btn, .cancel-scheduled-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
