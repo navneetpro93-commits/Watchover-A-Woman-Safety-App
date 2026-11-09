@@ -5,12 +5,14 @@ import {
   UserCheck, 
   ShieldAlert, 
   Volume2, 
+  VolumeX, 
   X, 
   Play, 
   CheckCircle2, 
-  HelpCircle 
+  HelpCircle,
+  Radio
 } from 'lucide-react';
-import { CALLER_SCRIPTS } from '../utils/fakeCallAudio';
+import { CALLER_SCRIPTS, speakCallerDialogue, stopCallerDialogue } from '../utils/fakeCallAudio';
 import FakeCallModal from './FakeCallModal';
 import { useToast } from '../context/ToastContext';
 
@@ -27,6 +29,7 @@ function FakeCallTrigger() {
   const [isScheduled, setIsScheduled] = useState(false);
   const [countdownRemaining, setCountdownRemaining] = useState(0);
   const [isCallModalOpen, setIsCallModalOpen] = useState(false);
+  const [isTestingVoice, setIsTestingVoice] = useState(false);
 
   const countdownTimerRef = useRef(null);
 
@@ -40,12 +43,29 @@ function FakeCallTrigger() {
 
   const currentCaller = CALLER_SCRIPTS[selectedCallerKey] || CALLER_SCRIPTS.police;
 
-  // Cleanup timers on unmount
+  // Cleanup timers & audio on unmount
   useEffect(() => {
     return () => {
       if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
+      stopCallerDialogue();
     };
   }, []);
+
+  // Test voice dialogue directly in panel
+  const handleToggleVoiceTest = () => {
+    if (isTestingVoice) {
+      stopCallerDialogue();
+      setIsTestingVoice(false);
+      return;
+    }
+
+    setIsTestingVoice(true);
+    speakCallerDialogue(
+      currentCaller,
+      () => setIsTestingVoice(true),
+      () => setIsTestingVoice(false)
+    );
+  };
 
   // Initiate call trigger
   const handleStartCall = () => {
@@ -195,8 +215,19 @@ function FakeCallTrigger() {
       <div className="trigger-footer">
         <div className="script-preview-box">
           <div className="script-preview-header">
-            <Volume2 size={14} />
-            <span>Spoken Voice Preview:</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Volume2 size={14} className={isTestingVoice ? 'icon-pulse-blue' : ''} />
+              <span>Spoken Voice Preview:</span>
+            </div>
+            <button 
+              type="button" 
+              className={`test-voice-preview-btn ${isTestingVoice ? 'active-testing' : ''}`}
+              onClick={handleToggleVoiceTest}
+              title="Click to test spoken voice dialogue now"
+            >
+              {isTestingVoice ? <VolumeX size={13} /> : <Volume2 size={13} />}
+              <span>{isTestingVoice ? 'Stop Speaking' : 'Test Spoken Voice'}</span>
+            </button>
           </div>
           <p className="script-preview-text">
             "{currentCaller.script}"

@@ -76,11 +76,25 @@ function FakeCallModal({ isOpen, caller, onClose }) {
       setDuration((prev) => prev + 1);
     }, 1000);
 
-    // Speak caller dialogue using Web Speech API
-    if (caller?.script) {
-      speakCallerDialogue(caller.script, () => {
-        setIsSpeaking(false);
-      });
+    // Speak caller dialogue using Web Speech API with caller acoustic profile
+    if (caller) {
+      speakCallerDialogue(
+        caller,
+        () => setIsSpeaking(true),
+        () => setIsSpeaking(false)
+      );
+    }
+  };
+
+  // Replay speech dialogue
+  const handleReplayDialogue = (e) => {
+    if (e) e.stopPropagation();
+    if (caller) {
+      speakCallerDialogue(
+        caller,
+        () => setIsSpeaking(true),
+        () => setIsSpeaking(false)
+      );
     }
   };
 
@@ -149,10 +163,31 @@ function FakeCallModal({ isOpen, caller, onClose }) {
 
           {/* Active Speaking Indicator */}
           {callState === 'connected' && (
-            <div className={`speaking-status-pill ${isSpeaking ? 'active-speaking' : ''}`}>
-              <span className="pulse-dot"></span>
-              {isSpeaking ? 'Caller Speaking...' : 'Call in Progress'}
-            </div>
+            <>
+              <div className={`speaking-status-pill ${isSpeaking ? 'active-speaking' : ''}`}>
+                <span className="pulse-dot"></span>
+                {isSpeaking ? 'Caller Speaking Voice...' : 'Voice Dialogue Ready'}
+              </div>
+
+              {/* In-Call Live Transcript & Replay Speech Button */}
+              <div className="in-call-transcript-card">
+                <div className="transcript-header">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Volume2 size={14} className={isSpeaking ? 'transcript-speaker-active' : ''} />
+                    <span>Caller Voice:</span>
+                  </div>
+                  <button 
+                    type="button" 
+                    className="replay-speech-btn"
+                    onClick={handleReplayDialogue}
+                    title="Tap to speak dialogue again"
+                  >
+                    🔊 Speak Again
+                  </button>
+                </div>
+                <p className="transcript-quote">"{caller.script}"</p>
+              </div>
+            </>
           )}
         </div>
 

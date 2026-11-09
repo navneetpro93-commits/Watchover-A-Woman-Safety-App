@@ -6593,6 +6593,66 @@ input:checked+.toggle-slider:before {
   100% { opacity: 1; transform: scale(1.3); }
 }
 
+/* In-Call Live Transcript & Speech Replay Card */
+.in-call-transcript-card {
+  margin-top: 14px;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 12px 14px;
+  max-width: 95%;
+  text-align: left;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.transcript-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #38bdf8;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+
+.transcript-speaker-active {
+  color: #10b981;
+  animation: pulseIcon 1s infinite alternate;
+}
+
+@keyframes pulseIcon {
+  0% { transform: scale(0.9); }
+  100% { transform: scale(1.25); }
+}
+
+.replay-speech-btn {
+  background: rgba(56, 189, 248, 0.18);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: #38bdf8;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.replay-speech-btn:hover {
+  background: #38bdf8;
+  color: #0f172a;
+}
+
+.transcript-quote {
+  font-size: 0.8rem;
+  color: #e2e8f0;
+  font-style: italic;
+  margin: 0;
+  line-height: 1.4;
+}
+
 /* In-Call Keypad Action Grid */
 .in-call-actions-grid {
   display: grid;
@@ -6985,13 +7045,47 @@ input:checked+.toggle-slider:before {
 .script-preview-header {
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: space-between;
+  gap: 8px;
   font-size: 0.78rem;
   font-weight: 700;
   color: var(--primary);
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.test-voice-preview-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.test-voice-preview-btn:hover {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.test-voice-preview-btn.active-testing {
+  background: #ef4444;
+  color: #ffffff;
+  border-color: #ef4444;
+  animation: pulsePill 1.2s infinite;
+}
+
+.icon-pulse-blue {
+  animation: pulseIcon 0.8s infinite alternate;
+  color: var(--primary);
 }
 
 .script-preview-text {
