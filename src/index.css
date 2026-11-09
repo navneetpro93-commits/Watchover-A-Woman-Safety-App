@@ -7283,3 +7283,289 @@ input:checked+.toggle-slider:before {
     justify-content: center;
   }
 }
+
+/* ==========================================================================
+   21. Stealth Audio Evidence Recorder Styles
+   ========================================================================== */
+
+/* Fullscreen Blackout Screen for Disguised Recording */
+.stealth-blackout-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background-color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.stealth-disguise-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.fake-clock-time {
+  font-size: 4rem;
+  font-weight: 300;
+  color: #334155;
+  letter-spacing: 0.05em;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.fake-battery-indicator {
+  font-size: 0.95rem;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fake-battery-level {
+  width: 28px;
+  height: 14px;
+  border: 1px solid #1e293b;
+  border-radius: 3px;
+  position: relative;
+}
+
+.fake-battery-level::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  bottom: 2px;
+  width: 75%;
+  background-color: #1e293b;
+  border-radius: 1px;
+}
+
+.stealth-hint-text {
+  font-size: 0.76rem;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 30px;
+}
+
+/* Main Recorder Card */
+.audio-recorder-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  margin-bottom: 28px;
+}
+
+.recorder-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.recorder-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.recorder-icon-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #ef4444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.badge-recording {
+  background: #ef4444;
+  color: #ffffff;
+  animation: pulsePill 1.2s infinite;
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.5);
+}
+
+.recorder-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-color);
+  margin: 0 0 4px 0;
+}
+
+.recorder-sub {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Live Recording Badge */
+.recording-live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  animation: pulsePill 2s infinite;
+}
+
+.rec-red-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+  animation: countdownPulse 0.9s infinite;
+}
+
+/* Visual Waveform Equalizer */
+.waveform-visualizer-container {
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 22px;
+  transition: all 0.3s ease;
+}
+
+.waveform-visualizer-container.visualizer-active {
+  border-color: rgba(239, 68, 68, 0.4);
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.08);
+}
+
+.waveform-bars-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 60px;
+  margin-bottom: 12px;
+}
+
+.waveform-bar {
+  width: 6px;
+  border-radius: 6px;
+  transition: height 0.06s ease, background-color 0.2s ease;
+}
+
+.waveform-info-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-color);
+  padding-top: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.waveform-codec-tag {
+  font-family: monospace;
+  font-size: 0.72rem;
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--primary);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+/* Action Controls */
+.recorder-controls-row {
+  margin-bottom: 18px;
+}
+
+.start-record-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: 800;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(239, 68, 68, 0.3);
+  width: 100%;
+  justify-content: center;
+}
+
+.recording-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-stealth-mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: #0f172a;
+  color: #f8fafc;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+  min-width: 200px;
+  justify-content: center;
+}
+
+.btn-stealth-mode:hover {
+  background: #1e293b;
+  border-color: #64748b;
+  color: #ffffff;
+}
+
+.stop-record-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  border-radius: 12px;
+  flex: 1;
+  min-width: 220px;
+  justify-content: center;
+}
+
+/* Recorder Pro-Tip */
+.recorder-pro-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 0.82rem;
+  color: var(--text-color);
+  line-height: 1.45;
+}
+
+.recorder-pro-tip svg {
+  color: var(--primary);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
