@@ -13,6 +13,7 @@ import ServiceDetail from './pages/ServiceDetail';
 import SafetyTips from './pages/SafetyTips';
 import SafetyKit from './pages/SafetyKit';
 import Incidents from './pages/Incidents';
+import FakeCall from './pages/FakeCall';
 import EmergencyNumbers from './pages/EmergencyNumbers';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
@@ -186,6 +187,14 @@ function App() {
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <Incidents user={user} />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/fake-call" 
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <FakeCall />
               </ProtectedRoute>
             } 
           />

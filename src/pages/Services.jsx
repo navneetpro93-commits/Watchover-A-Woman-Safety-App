@@ -1,5 +1,6 @@
 import React from 'react';
-import { Navigation, Users, Smartphone, ShieldAlert, CheckCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Navigation, Users, Smartphone, ShieldAlert, CheckCircle, PhoneCall, ArrowRight } from 'lucide-react';
 import ServiceCard from '../components/ServiceCard';
 import { useLanguage } from '../utils/useLanguage';
 
@@ -50,7 +51,7 @@ function Services() {
       </div>
 
       <div className="container page-section" style={{ paddingTop: 0 }}>
-        <div className="categories-grid" style={{ marginBottom: '50px' }}>
+        <div className="categories-grid" style={{ marginBottom: '32px' }}>
           {services.map((service) => (
             <ServiceCard
               key={service.id}
@@ -60,6 +61,25 @@ function Services() {
               icon={service.icon}
             />
           ))}
+        </div>
+
+        {/* Quick-Action Escape Tool: Fake Call Simulator */}
+        <div className="fake-call-banner-card">
+          <div className="fake-call-banner-left">
+            <div className="fake-call-banner-icon">
+              <PhoneCall size={28} />
+            </div>
+            <div>
+              <span className="card-tag">Escape & De-escalation Simulator</span>
+              <h3 className="fake-call-banner-title">Need a Discretionary Exit? Fake Incoming Call</h3>
+              <p className="fake-call-banner-desc">
+                Simulate a realistic incoming phone call from "Dad", "Mom", or "Inspector Sharma" with native audio ringing and voice dialogue to exit uncomfortable situations safely.
+              </p>
+            </div>
+          </div>
+          <Link to="/fake-call" className="btn-primary fake-call-launch-btn">
+            Launch Simulator <ArrowRight size={18} />
+          </Link>
         </div>
 
         {/* Why Awareness Matters Informational Card */}
