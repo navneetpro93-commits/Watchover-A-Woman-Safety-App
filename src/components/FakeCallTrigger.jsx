@@ -12,7 +12,12 @@ import {
   HelpCircle,
   Radio
 } from 'lucide-react';
-import { CALLER_SCRIPTS, speakCallerDialogue, stopCallerDialogue } from '../utils/fakeCallAudio';
+import { 
+  CALLER_SCRIPTS, 
+  speakCallerDialogue, 
+  stopCallerDialogue,
+  unlockAudio 
+} from '../utils/fakeCallAudio';
 import FakeCallModal from './FakeCallModal';
 import { useToast } from '../context/ToastContext';
 
@@ -31,8 +36,6 @@ function FakeCallTrigger() {
   const [isCallModalOpen, setIsCallModalOpen] = useState(false);
   const [isTestingVoice, setIsTestingVoice] = useState(false);
 
-  const countdownTimerRef = useRef(null);
-
   // Available timer presets
   const timerPresets = [
     { label: 'Instant', value: 0 },
@@ -46,13 +49,31 @@ function FakeCallTrigger() {
   // Cleanup timers & audio on unmount
   useEffect(() => {
     return () => {
-      if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
       stopCallerDialogue();
     };
   }, []);
 
+  // Bulletproof countdown scheduler hook
+  useEffect(() => {
+    if (!isScheduled) return;
+
+    if (countdownRemaining <= 0) {
+      setIsScheduled(false);
+      setIsCallModalOpen(true);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setCountdownRemaining((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [isScheduled, countdownRemaining]);
+
   // Test voice dialogue directly in panel
   const handleToggleVoiceTest = () => {
+    unlockAudio();
+
     if (isTestingVoice) {
       stopCallerDialogue();
       setIsTestingVoice(false);
@@ -69,6 +90,9 @@ function FakeCallTrigger() {
 
   // Initiate call trigger
   const handleStartCall = () => {
+    // Unlock browser audio context during this explicit user click gesture
+    unlockAudio();
+
     if (delaySeconds === 0) {
       // Instant call
       setIsScheduled(false);
@@ -82,35 +106,20 @@ function FakeCallTrigger() {
       return;
     }
 
-    // Scheduled countdown
+    // Start scheduled countdown
     setIsScheduled(true);
     setCountdownRemaining(delaySeconds);
 
     showToast({
       title: "Call Scheduled",
-      message: `Simulated call will ring in ${delaySeconds} seconds. You can lock or switch tabs.`,
+      message: `Simulated call from ${currentCaller.name} will ring in ${delaySeconds} seconds.`,
       type: "info",
-      duration: 4000
+      duration: 3500
     });
-
-    if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
-
-    countdownTimerRef.current = setInterval(() => {
-      setCountdownRemaining((prev) => {
-        if (prev <= 1) {
-          clearInterval(countdownTimerRef.current);
-          setIsScheduled(false);
-          setIsCallModalOpen(true);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
   };
 
   // Cancel scheduled countdown
   const handleCancelCountdown = () => {
-    if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
     setIsScheduled(false);
     setCountdownRemaining(0);
     showToast({

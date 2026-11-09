@@ -28,6 +28,27 @@ if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
 }
 
 /**
+ * Pre-unlock Web Audio and SpeechSynthesis during a user interaction gesture
+ */
+export function unlockAudio() {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    if (!audioCtx || audioCtx.state === 'closed') {
+      audioCtx = new AudioContext();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    if ('speechSynthesis' in window && window.speechSynthesis.paused) {
+      window.speechSynthesis.resume();
+    }
+  } catch (e) {
+    console.warn("Audio unlock notice:", e);
+  }
+}
+
+/**
  * Start simulated smartphone ringing sound using Web Audio API
  */
 export function startRingtone() {
@@ -37,7 +58,12 @@ export function startRingtone() {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     if (!AudioContext) return;
 
-    audioCtx = new AudioContext();
+    if (!audioCtx || audioCtx.state === 'closed') {
+      audioCtx = new AudioContext();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
 
     const playRingCycle = () => {
       if (!audioCtx || audioCtx.state === 'closed') return;
@@ -87,7 +113,7 @@ export function startRingtone() {
 }
 
 /**
- * Stop any ongoing ringing sound and clean up audio context
+ * Stop any ongoing ringing sound without destroying the unlocked audio context
  */
 export function stopRingtone() {
   if (ringInterval) {
@@ -102,13 +128,6 @@ export function stopRingtone() {
     } catch (_) {}
   });
   activeOscillators = [];
-
-  if (audioCtx) {
-    try {
-      audioCtx.close();
-    } catch (_) {}
-    audioCtx = null;
-  }
 }
 
 /**
